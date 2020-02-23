@@ -1,0 +1,61 @@
+.main{
+    /* to hide the scrollbar */
+    -ms-overflow-style: none;
+    position: relative;
+}
+
+.main::-webkit-scrollbar {
+    display: none;
+}
+
+.banner{
+    position: fixed;
+    background: #fff;
+}
+
+.icon_wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 10vh;
+}
+
+.login-wrapper{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+    height: 100vh;
+    background: #F4F8F9;
+}
+
+.instructions-wrapper{
+    height: 90vh;
+}
+
+.login-form{
+    color: white;
+}
+
+.instructions{
+    background-color: #EBF4FF;
+    border-radius: 5px;
+    margin: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.instruction-text-primary{
+    color: #4DA1FF;
+    font-weight: bold;
+    margin: 0px;
+}
+
+.instructions-text-secoundary{
+    margin: 0px;
+    color: #808FA3;
+    font-weight: lighter;
+}
