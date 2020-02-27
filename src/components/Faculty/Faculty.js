@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import './faculty.css';
 import logo from '../../assets/images/bepms-logo.png';
-import FacultyReport from './FacultyReport/FacultyReport';
-import FacultySetting from './FacultySetting/FacultySetting';
-import FacultyProject from './FacultyProject/FacultyProject';
-import FacultyNotification from './FacultyNotification/FacultyNotification';
 import FolderIcon from '../../assets/images/folder_icon.png';
+
+import FacultyReport from './FacultyReport/FacultyReport';
+import FacultySetting from '../Setting/Setting';
+import FacultyProject from './FacultyProject/FacultyProject';
+import FacultyNotification from '../Notification/Notification';
 
 class Faculty extends Component {
     constructor(props) {

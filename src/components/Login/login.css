@@ -2,6 +2,7 @@
     /* to hide the scrollbar */
     -ms-overflow-style: none;
     position: relative;
+
 }
 
 .main::-webkit-scrollbar {
@@ -11,6 +12,7 @@
 .banner{
     position: fixed;
     background: #fff;
+    z-index: 1;
 }
 
 .icon_wrapper{
@@ -31,7 +33,7 @@
 }
 
 .instructions-wrapper{
-    height: 90vh;
+    
 }
 
 .login-form{
@@ -41,7 +43,7 @@
 .instructions{
     background-color: #EBF4FF;
     border-radius: 5px;
-    margin: 10px;
+    margin: 20px;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 20px;
@@ -58,4 +60,30 @@
     margin: 0px;
     color: #808FA3;
     font-weight: lighter;
+}
+
+.login-instruction-main-gradient{
+    height:100%;
+    width:100%;
+    background-image: linear-gradient(50deg, #4DA1FF 0%, #0A78FF 93%);
+    position:absolute;
+    top:0;
+    left:0;
+    z-index: -10;
+}
+
+.login-wallpaper{
+    position:absolute;
+    height: 100%;
+    opacity: 0.14;
+    z-index: -5;
+}
+
+.login-instruction-main{
+    position:absolute;
+    height:100%;
+    width:100%;
+    top:0;
+    left:0;
+    z-index: 0;
 }

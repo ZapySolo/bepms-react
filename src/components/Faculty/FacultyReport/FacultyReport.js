@@ -18,6 +18,7 @@ class FacultyReport extends Component {
                     <div className="sidenav" style={{width:sidebarWidth}}>
                         <div className="sidebar_content">
                             <div href="#" className="closebtn" onClick={()=>{this.setState({sideBarToggle: false})}}>&times;</div>
+                            <div style={{marginBottom:10}}>Reports</div>
                             <div className="report-list">
                                 <div className="report-search-input">
                                     <input className="report-search-element" type="text" name="Search" value="Search" style={{color:'#CBCBCB', }}/>
