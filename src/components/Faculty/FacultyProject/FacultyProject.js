@@ -13,7 +13,18 @@ class FacultyProject extends Component {
 
         return (
             <>
-                This is faculty project section
+                <div className="faculty-settings">
+                    <div>
+                        <div className="profile-setting">
+                            <div className="profile-image-container">
+                                <img src="" alt="profile_img" />
+                            </div>
+                            <div className="profile-edit">
+                                Edit
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </>
         );
     }
