@@ -10,17 +10,101 @@ class FacultyReport extends Component {
         this.state = {
             sideBarToggle: false,
             createReportActive:false,
-            percentageClaim:30
+            percentageClaim:30,
+            editReportActive:false
         };
     }
 
+    editReport = ()=>{
+
+        return (
+            <>
+                <div className="setting-fields">
+                    <div style={{marginTop:40, marginiBottom:20, display:'flex', justifyContent:'space-between', alignItems:'center', flexDirection:'row'}}>
+                        <span>Edit Report</span>
+                        <span onClick={()=>{this.setState({editReportActive:false})}}>Cancel</span>
+                    </div>
+
+                    <div className="input-field">
+                        <div className="input-field-lable">
+                            <span className="input-field-lable-text" >Report title</span>
+                        </div>
+                        <div className="field-input">
+                            <input className="field-input-element" type="text" name="Search" value="Dameon" style={{color:'#CBCBCB', }}/>
+                        </div>
+                        <div className="field-error">
+                            <span className="error-message-text">Invalid First Name</span>
+                        </div>
+                    </div>
+
+                    <div className="field-input-text-area-element">
+                        <div className="input-field-lable">
+                            <span className="input-field-lable-text" >Description</span>
+                        </div>
+                        <div className="field-input-textarea">
+                            <textarea className="field-input-text-area-element" type="text" name="Search" value="Dameon" style={{color:'#CBCBCB', }}/>
+                        </div>
+                        <div className="field-error">
+                            <span className="error-message-text">Invalid First Name</span>
+                        </div>
+                    </div>
+
+                    <div className="input-field">
+                        <div className="input-field-lable">
+                            <span className="input-field-lable-text" >Attachments</span>
+                        </div>
+                        <div className="field-input">
+                            <input className="field-input-element" type="text" name="Search" value="Dameon" style={{color:'#CBCBCB', }}/>
+                        </div>
+                        <div className="field-error">
+                            <span className="error-message-text">Invalid First Name</span>
+                        </div>
+                    </div>
+
+                    <div className="input-field">
+                        <div className="input-field-lable">
+                            <span className="input-field-lable-text" >Percentage Completed</span>
+                        </div>
+                        <div className="field-input">
+                            <div style={{margin:10, marginTop:20}}>
+                                <InputRange
+                                    maxValue={100}
+                                    minValue={0}
+                                    value={this.state.percentageClaim}
+                                    onChange={value => this.setState({ percentageClaim: value })}
+                                />
+                            </div>
+                        </div>
+                        <div className="field-error">
+                            <span className="error-message-text">Invalid First Name</span>
+                        </div>
+                    </div>
+
+
+                    <div className="input-field">
+                        <div className="setting-submit">
+                            <input className="submit-button" type="submit" name="Submit" />
+                        </div>
+                    </div>
+
+                </div>
+            </>
+        );
+    }
+
     reportDetails = ()=> {
+
+        if(this.state.editReportActive){
+            return this.editReport();
+        }
+
         if(this.state.createReportActive){
             return (
                 <>
                     <div className="setting-fields">
-                        <div style={{marginTop:40, marginiBottom:20}}>
+                        <div style={{marginTop:40, marginiBottom:20, display:'flex', justifyContent:'space-between', alignItems:'center', flexDirection:'row'}}>
                             <span>Create New Report</span>
+                            <span onClick={()=>{this.setState({createReportActive:false})}}>Cancel</span>
                         </div>
 
                         <div className="input-field">
@@ -89,6 +173,7 @@ class FacultyReport extends Component {
                 </>
             );
         }
+
         return (
             <>
                 <div className="report-head">
@@ -124,16 +209,8 @@ class FacultyReport extends Component {
 
                 <div className="card_rank mt20">
                     <div className="card_inner_rank report-action">
-                        <div className="action_approve_btn">Approve</div>
-                        <div className="action_change_btn">Assign Changes</div>
-                        <div className="action_disapprove_btn">Disapprove</div>
-                    </div>
-                    <div className="description-content">
-                            <span>Disapprove Reason</span>
-                            <div className="action-input-element mt10">
-                                <input className="reason_input" type="text" name="reason" value="Search" style={{color:'#CBCBCB', }}/>
-                                <span className="action_disapprove_btn bg_primary">Submit</span>
-                            </div>
+                        <div>Modify Report</div>
+                        <div className="action_change_btn" onClick={()=>{this.setState({editReportActive:true})}}>Edit</div>
                     </div>
                 </div>
 
@@ -174,7 +251,10 @@ class FacultyReport extends Component {
                     <div className="sidenav" style={{width:sidebarWidth}}>
                         <div className="sidebar_content">
                          
-                            <div href="#" className="closebtn" onClick={()=>{this.setState({sideBarToggle: false})}}>&times;</div>
+                            <div href="#" className="closebtn" 
+                                onClick={()=>{
+                                    this.setState({sideBarToggle: false})
+                                }}>&times;</div>
                             <div style={{marginBottom:10}}>Reports</div>
                             <div 
                                 onClick={()=>{this.createReport()}}

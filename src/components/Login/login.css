@@ -5,6 +5,14 @@
 
 }
 
+.desktop-login-cxc{
+    display: none;
+}
+
+.login-wrapper-desktop{
+    display: none;
+}
+
 .main::-webkit-scrollbar {
     display: none;
 }
@@ -44,28 +52,27 @@
     background-color: #EBF4FF;
     border-radius: 5px;
     margin: 20px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding: 16px;
 }
 
 .instruction-text-primary{
     color: #4DA1FF;
     font-weight: bold;
-    margin: 0px;
+    font-size: small;
+    margin: 5px 0px;
 }
 
-.instructions-text-secoundary{
-    margin: 0px;
+.instruction-text-secoundary{
+    margin: 10px 0px;
     color: #808FA3;
-    font-weight: lighter;
+    font-weight: 400;
+    font-size: small;
 }
 
 .login-instruction-main-gradient{
     height:100%;
     width:100%;
-    background-image: linear-gradient(50deg, #4DA1FF 0%, #0A78FF 93%);
+    background-image: linear-gradient(50deg, #0A78FF 0%, #0059C7 93%);
     position:absolute;
     top:0;
     left:0;
@@ -77,6 +84,11 @@
     height: 100%;
     opacity: 0.14;
     z-index: -5;
+    overflow: hidden;
+}
+
+.login-wallpaper-img{
+    height: 100%;
 }
 
 .login-instruction-main{
@@ -86,4 +98,188 @@
     top:0;
     left:0;
     z-index: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+/* flogin-instruction-main */
+
+.login-form{
+    width:329px;
+    height: 423px;
+    background: #FFFFFF;
+    box-shadow: 0 12px 19px 13px rgba(235,235,235,0.50);
+    border-radius: 5px;
+}
+
+.login-form-inputs{
+    margin-top: 50px;
+    margin-left: 36px;
+    margin-right: 36px;
+}
+
+.login-submit{
+    height: 45px;
+    width: 100%;
+    background: #4DA1FF;
+    border-radius: 5px;
+    color: white;
+    font-size: 13px;
+    outline: none;
+    border: 0px;
+}
+
+.forgot-password{
+    font-family: Sailec-Medium;
+    font-size: 13px;
+    color: #2BA1FF;
+    letter-spacing: -0.16px;
+}
+
+.input-field{
+    height: 45px;
+    background: #F3F3F3;
+    border-radius: 5px;
+    outline: none;
+    border: 0px;
+    width: 239px;
+    padding-left: 18px;
+    font-family: Sailec-Medium;
+    font-size: 13px;
+    color: #CECCCC;
+    letter-spacing: -0.16px;
+    margin-bottom: 10px;
+}
+
+.login-text{
+    font-family: Sailec-Bold;
+    font-size: 28px;
+    color: #323C47;
+    letter-spacing: -0.35px;
+}
+
+.login-disclaimer{
+    font-family: Sailec-Medium;
+    font-size: 13px;
+    color: #323C47;
+    letter-spacing: -0.16px;
+    margin-top: 13px;
+    margin-bottom: 20px;
+}
+
+.login-type-toggle{
+    font-family: Sailec-Medium;
+    font-size: 13px;
+    color: #323C47;
+    letter-spacing: -0.16px;
+}
+
+.forgot-password-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.scs{
+    margin-left: 0px;
+}
+
+
+.itp-1{
+    font-family: Sailec-Medium;
+    font-size: 31px;
+    color: #FFFFFF;
+    letter-spacing: -0.39px;
+}
+
+.itp-2{
+    font-family: Sailec-Bold;
+    font-size: 38px;
+    color: #FFFFFF;
+    letter-spacing: -0.47px;
+}
+
+.itp-3{
+    font-family: Sailec-Medium;
+    font-size: 20px;
+    color: #FFFFFF;
+    letter-spacing: -0.25px;
+    line-height: 29px;
+}
+
+
+@media (max-width:330px){
+    .login-form{
+        width:100%;
+    }
+}
+
+@media (min-width: 400px) {
+
+    .instructions{
+        width:330px;
+    }
+    
+}
+
+@media (min-width: 450px) {
+
+    .hero-text{
+        width:411px;
+    }
+    
+}
+
+@media (min-width: 600px) {
+  
+    .instructions{
+        width:330px;
+        margin-left:50px;
+        margin-bottom:50px;
+    }
+
+    .hero-text{
+        margin-left:50px;
+    }
+    
+}
+
+@media (min-width: 1144px){
+    .login-instruction-main{
+        widows: 100%;
+    }
+
+    .about-bepms{
+        width: 600px;
+    }
+    .login-instruction-main-gradient{
+        width: 600px;
+    }
+    .login-wallpaper{
+        width: 600px;
+        height:100%;
+        background-size: auto;
+    }
+    .login-wrapper{
+        display: none;
+    }
+
+    .login-wrapper-desktop{
+        display: block;
+    }
+
+    .desktop-login-cxc{
+        display:flex; 
+        justify-content:center; 
+        align-items:center;
+    }
+    .scs{
+        margin-left: 80px;
+    }
 }

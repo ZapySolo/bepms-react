@@ -38,73 +38,61 @@ class Setting extends Component {
 
                             <div className="input-field">
                                 <div className="input-field-lable">
-                                    <span className="input-field-lable-text" >First Name</span>
+                                    <span className="input-field-lable-text" >Last Name</span>
                                 </div>
                                 <div className="field-input">
                                     <input className="field-input-element" type="text" name="Search" value="Dameon" style={{color:'#CBCBCB', }}/>
                                 </div>
                                 <div className="field-error">
-                                    <span className="error-message-text">Invalid First Name</span>
+                                    <span className="error-message-text">Invalid Last Name</span>
                                 </div>
                             </div>
 
                             <div className="input-field">
                                 <div className="input-field-lable">
-                                    <span className="input-field-lable-text" >First Name</span>
+                                    <span className="input-field-lable-text" >Display Name</span>
                                 </div>
                                 <div className="field-input">
                                     <input className="field-input-element" type="text" name="Search" value="Dameon" style={{color:'#CBCBCB', }}/>
                                 </div>
                                 <div className="field-error">
-                                    <span className="error-message-text">Invalid First Name</span>
+                                    <span className="error-message-text">Invalid Display Name (can only contain one white space and period symbol)</span>
                                 </div>
                             </div>
 
                             <div className="input-field">
                                 <div className="input-field-lable">
-                                    <span className="input-field-lable-text" >First Name</span>
+                                    <span className="input-field-lable-text" >Email</span>
                                 </div>
                                 <div className="field-input">
-                                    <input className="field-input-element" type="text" name="Search" value="Dameon" style={{color:'#CBCBCB', }}/>
+                                    <input className="field-input-element" type="text" name="Search" value="nrpatil@yahoo.com" style={{color:'#CBCBCB', }}/>
                                 </div>
                                 <div className="field-error">
-                                    <span className="error-message-text">Invalid First Name</span>
+                                    <span className="error-message-text">Invalid Email</span>
                                 </div>
                             </div>
 
                             <div className="input-field">
                                 <div className="input-field-lable">
-                                    <span className="input-field-lable-text" >First Name</span>
+                                    <span className="input-field-lable-text" >Password</span>
                                 </div>
                                 <div className="field-input">
                                     <input className="field-input-element" type="text" name="Search" value="Dameon" style={{color:'#CBCBCB', }}/>
                                 </div>
                                 <div className="field-error">
-                                    <span className="error-message-text">Invalid First Name</span>
+                                    <span className="error-message-text">Invalid Password</span>
                                 </div>
                             </div>
 
                             <div className="input-field">
                                 <div className="input-field-lable">
-                                    <span className="input-field-lable-text" >First Name</span>
+                                    <span className="input-field-lable-text" >Re-Enter Password</span>
                                 </div>
                                 <div className="field-input">
                                     <input className="field-input-element" type="text" name="Search" value="Dameon" style={{color:'#CBCBCB', }}/>
                                 </div>
                                 <div className="field-error">
-                                    <span className="error-message-text">Invalid First Name</span>
-                                </div>
-                            </div>
-
-                            <div className="input-field">
-                                <div className="input-field-lable">
-                                    <span className="input-field-lable-text" >First Name</span>
-                                </div>
-                                <div className="field-input">
-                                    <input className="field-input-element" type="text" name="Search" value="Dameon" style={{color:'#CBCBCB', }}/>
-                                </div>
-                                <div className="field-error">
-                                    <span className="error-message-text">Invalid First Name</span>
+                                    <span className="error-message-text">Password Do not match</span>
                                 </div>
                             </div>
 

@@ -1,11 +1,11 @@
-.main{
+.main-mobile{
     /* to hide the scrollbar */
     -ms-overflow-style: none;
     position: relative;
     width:100vw;
 }
 
-.main::-webkit-scrollbar {
+.main-mobile::-webkit-scrollbar {
     display: none;
 }
 
@@ -28,7 +28,7 @@
     align-items: center;
     width: 100vw;
     height: 7vh;
-    z-index:1;
+    z-index: 10;
 }
 
 .icon_wrapper{
@@ -111,7 +111,7 @@
     height: 100%;
     width: 0;
     position: fixed;
-    z-index: 100;
+    z-index: 10000000 !important;
     top: 0;
     left: 0;
     background-color: #fff;
@@ -346,7 +346,7 @@ input:focus, textarea:focus, select:focus{
     left: 0px;
     height: 85px;
     width:85px;
-    /* z-index: -1; */
+    z-index: 1;
 }
 
 .project-action{
@@ -431,4 +431,86 @@ border: 1px solid #E9EFF4;
 
 .mt10{
     margin-top: 10px;
+}
+.left-navigator{
+    height: 100vh;
+    width:111px;
+    border-right: 1px solid #C5C5C5;
+    background-color: #fff;
+}
+
+.tablet-banner{
+    height: 111px;
+    width:100%;
+    border-bottom: 1px solid #C5C5C5;
+}
+
+.right-main{
+    height: 100%;
+    width: 100%;
+}
+
+.content-tablet{
+
+}
+
+.main-tablet{
+    display: none;
+}
+
+.tablet_card{
+    background: #FFFFFF;
+    box-shadow: 0 2px 9px 0 rgba(0,0,0,0.03);
+    border-radius: 6px;
+}
+
+.tablet-logo{
+    width: 100%;
+    height: 111px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-navigation-options{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+
+
+@media (min-width: 768px) {
+    /** Tablets and above */
+    .main-mobile{
+        display: none;
+    }
+
+    .main-tablet{
+        display:flex;
+        width: 100vw;
+        height: 100vh;
+        background-color: #F4F8F9;
+    }
+
+    .current-project-details{
+        background: #FFFFFF;
+        box-shadow: 0 2px 9px 0 rgba(0,0,0,0.03);
+        border-radius: 6px;
+        margin:20px auto;
+        width:630px;
+    }
+
+    .project-section-2{
+        padding:20px;
+    }
+
+    .toggle_search_wrapper{
+        background-color: '';
+    }
+}
+
+@media (min-width: 1144px){
+    /* Desktop */
 }

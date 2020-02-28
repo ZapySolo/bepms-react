@@ -6,6 +6,7 @@ import StudentReport from './StudentReport/StudentReport';
 import StudentSetting from '../Setting/Setting';
 import Notification from '../Notification/Notification';
 import FolderIcon from '../../assets/images/folder_icon.png';
+import HomepageIcon from '../../homepage-logo.svg';
 
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -15,7 +16,8 @@ class Student extends Component {
         super(props);
         this.state = {
             sideBarToggle: false,
-            activeTab: 'home'
+            activeTab: 'home',
+            sideBarWidth:'100vh'
         };
     }
 
@@ -86,55 +88,69 @@ class Student extends Component {
         );
     }
 
+    SideBar = () => {
+        let sidebarWidth = '100vw';
+
+        if(window.innerWidth >= 450) {
+            sidebarWidth = (!this.state.sideBarToggle)?'0px':'450px';
+        } else {
+            sidebarWidth = (!this.state.sideBarToggle)?'0px':'100vw';
+        }
+        
+        return (
+            <div className="sidenav" style={{width:sidebarWidth}}>
+                <div className="sidebar_content">
+                    <div href="#" className="closebtn" 
+                        onClick={()=>{
+                            this.setState({sideBarToggle: false});
+                        }}>&times;</div>
+                    <div className="currentSystem">
+                        <span>Your Current Project</span>
+                        <div className="currentSystem_content">
+                            <span className="current_system_title">Medical Drone</span>
+                            <span className="current_system_position_name">Your Position: Leader</span>
+                        </div>
+                    </div>
+                    <div className="currentSystem" style={{marginTop:20}}>
+                        <span>Other Project</span>
+                        <div className="otherSystem_content">
+                            <div className="other_system_title">
+                                <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
+                                <div className="otherSystemTitle">Desmensia The Pilla manager</div>
+                            </div>
+                        </div>
+                        <div className="otherSystem_content">
+                            <div className="other_system_title">
+                                <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
+                                <div className="otherSystemTitle">Mega Moga Manger</div>
+                            </div>
+                        </div>
+                        <div className="otherSystem_content">
+                            <div className="other_system_title">
+                                <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
+                                <div className="otherSystemTitle">I ran Out of names manager</div>
+                            </div>
+                        </div>
+            
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     FacultyHome = () => {
-        let sidebarWidth = (!this.state.sideBarToggle)?'0px':'100vw';
+       
 
         return(
             <>
-                <div className="sidenav" style={{width:sidebarWidth}}>
-                    <div className="sidebar_content">
-                        <div href="#" className="closebtn" onClick={()=>{this.setState({sideBarToggle: false})}}>&times;</div>
-                        <div className="currentSystem">
-                            <span>Your Current Project</span>
-                            <div className="currentSystem_content">
-                                <span className="current_system_title">Medical Drone</span>
-                                <span className="current_system_position_name">Your Position: Leader</span>
-                            </div>
-                        </div>
-                        <div className="currentSystem" style={{marginTop:20}}>
-                            <span>Other Project</span>
-                            <div className="otherSystem_content">
-                                <div className="other_system_title">
-                                    <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
-                                    <div className="otherSystemTitle">Desmensia The Pilla manager</div>
-                                </div>
-                            </div>
-                            <div className="otherSystem_content">
-                                <div className="other_system_title">
-                                    <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
-                                    <div className="otherSystemTitle">Mega Moga Manger</div>
-                                </div>
-                            </div>
-                            <div className="otherSystem_content">
-                                <div className="other_system_title">
-                                    <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
-                                    <div className="otherSystemTitle">I ran Out of names manager</div>
-                                </div>
-                            </div>
-             
-                        </div>
-                    </div>
-                </div>
-
-
                 <div className="toggle_search_wrapper">
-                    <div className="drawer_toggle">
+                    <div className="drawer_toggle" style={{flexDirection:'row', justifyContent:'flex-start', width:'100%'}}>
                         <span className="font30" onClick={()=>{this.setState({sideBarToggle: true})}}>&#9776;</span>
                     </div>
                 </div>
                 <div className="current-project-details">
                     <div className="project-image">
-                        <div className="cover-image-padd">
+                        <div className="cover-image-padd" style={{height:'170px', width:'100%'}}>
                             <img src="https://source.unsplash.com/random/400x200" style={{objectFit:"cover"}} height="170px" width="100%" alt="profile" />
                         </div>
                     </div>
@@ -217,7 +233,9 @@ class Student extends Component {
 
     render() {
         return (
-            <div className="main">
+            <>
+            {this.SideBar()}
+            <div className="main-mobile">
                 <div className="banner">
                     <div className="icon_wrapper">
                         <img src={logo} height="30" alt="bepms"/>
@@ -235,6 +253,31 @@ class Student extends Component {
                     {this.renderComponent()}
                 </div>
             </div>
+
+            <div className="main-tablet">
+                <div className="left-navigator">
+                    <div className="tablet-logo">
+                        <div>BEPMS</div>
+                    </div>
+                    <div className="left-navigation-options">
+                        <img style={{marginTop:30}} src={HomepageIcon} onClick={()=>{this.setState({activeTab: 'home'})}} />
+                        <img style={{marginTop:30}} src={HomepageIcon} onClick={()=>{this.setState({activeTab: 'report'})}}/>
+                        <img style={{marginTop:30}} src={HomepageIcon} onClick={()=>{this.setState({activeTab: 'setting'})}}/>
+                        <img style={{marginTop:30}} src={HomepageIcon} onClick={()=>{this.setState({activeTab: 'notification'})}}/>
+                    </div>
+                </div>
+                <div className="right-main">
+                    <div className="tablet-banner">
+                        
+                    </div>
+                    <div className="content-tablet">
+                        {this.renderComponent()}
+                    </div>
+
+                </div>
+
+            </div>
+            </>
         );
     }
 }
