@@ -24,7 +24,7 @@ class Student extends Component {
     renderComponent = () => {
         switch(this.state.activeTab){
             case 'home':
-                return this.FacultyHome();
+                return this.StudentHome();
              
             case 'report':
                 return <StudentReport />;
@@ -88,9 +88,44 @@ class Student extends Component {
         );
     }
 
+    SelectProjects = ()=> {
+        return (
+            <div className="selectProjects">
+                <div className="currentSystem">
+                    <span>Your Current Project</span>
+                    <div className="currentSystem_content">
+                        <span className="current_system_title">Medical Drone</span>
+                        <span className="current_system_position_name">Your Position: Leader</span>
+                    </div>
+                </div>
+                <div className="currentSystem" style={{marginTop:20}}>
+                    <span>Other Project</span>
+                    <div className="currentSystem_content">
+                        <div className="other_system_title">
+                            <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
+                            <div className="otherSystemTitle">Desmensia The Pilla manager</div>
+                        </div>
+                    </div>
+                    <div className="currentSystem_content">
+                        <div className="other_system_title">
+                            <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
+                            <div className="otherSystemTitle">Mega Moga Manger</div>
+                        </div>
+                    </div>
+                    <div className="currentSystem_content">
+                        <div className="other_system_title">
+                            <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
+                            <div className="otherSystemTitle">I ran Out of names manager</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     SideBar = () => {
         let sidebarWidth = '100vw';
-
+        
         if(window.innerWidth >= 450) {
             sidebarWidth = (!this.state.sideBarToggle)?'0px':'450px';
         } else {
@@ -104,49 +139,23 @@ class Student extends Component {
                         onClick={()=>{
                             this.setState({sideBarToggle: false});
                         }}>&times;</div>
-                    <div className="currentSystem">
-                        <span>Your Current Project</span>
-                        <div className="currentSystem_content">
-                            <span className="current_system_title">Medical Drone</span>
-                            <span className="current_system_position_name">Your Position: Leader</span>
-                        </div>
-                    </div>
-                    <div className="currentSystem" style={{marginTop:20}}>
-                        <span>Other Project</span>
-                        <div className="otherSystem_content">
-                            <div className="other_system_title">
-                                <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
-                                <div className="otherSystemTitle">Desmensia The Pilla manager</div>
-                            </div>
-                        </div>
-                        <div className="otherSystem_content">
-                            <div className="other_system_title">
-                                <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
-                                <div className="otherSystemTitle">Mega Moga Manger</div>
-                            </div>
-                        </div>
-                        <div className="otherSystem_content">
-                            <div className="other_system_title">
-                                <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
-                                <div className="otherSystemTitle">I ran Out of names manager</div>
-                            </div>
-                        </div>
-            
-                    </div>
+                    {this.SelectProjects()}
                 </div>
             </div>
         );
     }
 
-    FacultyHome = () => {
+    StudentHome = () => {
        
-
         return(
-            <>
+            <div className="studentName">
                 <div className="toggle_search_wrapper">
                     <div className="drawer_toggle" style={{flexDirection:'row', justifyContent:'flex-start', width:'100%'}}>
                         <span className="font30" onClick={()=>{this.setState({sideBarToggle: true})}}>&#9776;</span>
                     </div>
+                </div>
+                <div className="select-projects">
+                    {this.SelectProjects()}
                 </div>
                 <div className="current-project-details">
                     <div className="project-image">
@@ -227,7 +236,7 @@ class Student extends Component {
                         </div>
                     </div>
                 </div>
-            </>
+            </div>
         );
     }
 
@@ -256,21 +265,34 @@ class Student extends Component {
 
             <div className="main-tablet">
                 <div className="left-navigator">
-                    <div className="tablet-logo">
-                        <div>BEPMS</div>
+                    <div className="logo-box" >
+                        <div style={{height:'111px' , width:'111px', display:'flex', justifyContent:'center', alignItems:'center'}}><img src={logo} height="30" alt="bepms"/></div>
                     </div>
                     <div className="left-navigation-options">
-                        <img style={{marginTop:30}} src={HomepageIcon} onClick={()=>{this.setState({activeTab: 'home'})}} />
-                        <img style={{marginTop:30}} src={HomepageIcon} onClick={()=>{this.setState({activeTab: 'report'})}}/>
-                        <img style={{marginTop:30}} src={HomepageIcon} onClick={()=>{this.setState({activeTab: 'setting'})}}/>
-                        <img style={{marginTop:30}} src={HomepageIcon} onClick={()=>{this.setState({activeTab: 'notification'})}}/>
+                        <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'home'})}}>
+                            <img src={HomepageIcon}  />
+                            <span className="navigation_title">Homepage</span>
+                        </div>
+                        <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'report'})}}>
+                            <img  src={HomepageIcon} />
+                            <span className="navigation_title">Reports</span>
+                        </div>
+                        <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'setting'})}}>
+                            <img  src={HomepageIcon} />
+                            <span className="navigation_title">Setting</span>
+                        </div>
+                        <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'notification'})}}>
+                            <img  src={HomepageIcon} />
+                            <span className="navigation_title">Notifications</span>
+                        </div>
                     </div>
                 </div>
+
                 <div className="right-main">
                     <div className="tablet-banner">
-                        
+                
                     </div>
-                    <div className="content-tablet">
+                    <div className="content-tablet" style={{height:window.innerHeight-111, overflow:'scroll'}}>
                         {this.renderComponent()}
                     </div>
 

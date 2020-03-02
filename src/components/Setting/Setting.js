@@ -12,10 +12,11 @@ class Setting extends Component {
     render() {
         return (
             <>
-                <div className="faculty-settings">
+                <div className="faculty-settings"> 
                     <div className="profile-setting">
+
                         <div className="profile-image-setting">
-                            <div className="profile-image-container" style={{height:110, width:110}}>
+                            <div style={{height:100, width:100, position:'relative', marginBottom: 25, marginTop:20, backgroundColor:'red', textAlign:'center', borderRadius:50}}>
                                 <img src="https://source.unsplash.com/random/100x100" alt="profile_img" style={{height:100, width:100 ,borderRadius:50}} />
                                 <div className="profile-edit">
                                     <span className="profile-edit-text">Edit</span>
@@ -60,6 +61,8 @@ class Setting extends Component {
                                 </div>
                             </div>
 
+                            <div> </div>
+
                             <div className="input-field">
                                 <div className="input-field-lable">
                                     <span className="input-field-lable-text" >Email</span>
@@ -69,6 +72,18 @@ class Setting extends Component {
                                 </div>
                                 <div className="field-error">
                                     <span className="error-message-text">Invalid Email</span>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <div className="input-field-lable">
+                                    <span className="input-field-lable-text" >Re-Enter Email</span>
+                                </div>
+                                <div className="field-input">
+                                    <input className="field-input-element" type="text" name="Search" value="nrpatil@yahoo.com" style={{color:'#CBCBCB', }}/>
+                                </div>
+                                <div className="field-error">
+                                    <span className="error-message-text">email do not match</span>
                                 </div>
                             </div>
 

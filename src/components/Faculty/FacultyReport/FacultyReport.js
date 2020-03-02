@@ -1,95 +1,139 @@
 import React, {Component} from 'react';
 import './facultyreport.css';
 
+import Expand from 'react-expand-animated';
+
+import SearchIcon from '../../search.svg';
+
 class FacultyReport extends Component {
     constructor(props) {
         super(props);
         this.state = {
             sideBarToggle: false,
+            descriptionToggle:true,
+            attachmentToggle:false,
+            reasonToggle:false
         };
     }
 
-    render() {
-        let sidebarWidth = (!this.state.sideBarToggle)?'0px':'100vw';
+    SideBar = ()=>{
+        let sidebarWidth = '100vw';
+
+        if(window.innerWidth >= 450) {
+            sidebarWidth = (!this.state.sideBarToggle)?'0px':'450px';
+        } else {
+            sidebarWidth = (!this.state.sideBarToggle)?'0px':'100vw';
+        }
+
+        return (
+            <div className="sidenav" style={{width:sidebarWidth}}>
+                <div className="sidebar_content">
+                    
+                    <div href="#" className="closebtn" 
+                        onClick={()=>{
+                            this.setState({sideBarToggle: false})
+                        }}>&times;
+                    </div>
+
+                    {this.searchReport()}
+
+                </div>
+            </div>
+        );
+
+    }
+
+    searchReport = () => {
         return (
             <>
-                <div className="report-details">
-                    {/**Report Side Bar*/}
-                    <div className="sidenav" style={{width:sidebarWidth}}>
-                        <div className="sidebar_content">
-                            <div href="#" className="closebtn" onClick={()=>{this.setState({sideBarToggle: false})}}>&times;</div>
-                            <div style={{marginBottom:10}}>Reports</div>
-                            <div className="report-list">
-                                <div className="report-search-input">
-                                    <input className="report-search-element" type="text" name="Search" value="Search" style={{color:'#CBCBCB', }}/>
-                                </div>
-                                <div className="report-search-result-list card_rank">
-                                    <div style={{width:5, backgroundColor:'red', height:'auto'}} />
-                                    <div className="report-description">
-                                        <div className="report-result-title">
-                                            <span className="report-result-title-text">Completed making the changes in the description.</span>
-                                        </div>
-                                        <div>
-                                            <span className="report-result-date-text">25 Jan 2020</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="report-search-result-list card_rank">
-                                    <div style={{width:5, backgroundColor:'red', height:'auto'}} />
-                                    <div className="report-description">
-                                        <div className="report-result-title">
-                                            <span className="report-result-title-text">Completed making the changes in the description.</span>
-                                        </div>
-                                        <div>
-                                            <span className="report-result-date-text">25 Jan 2020</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="report-search-result-list card_rank">
-                                    <div style={{width:5, backgroundColor:'red', height:'auto'}} />
-                                    <div className="report-description">
-                                        <div className="report-result-title">
-                                            <span className="report-result-title-text">Completed making the changes in the description.</span>
-                                        </div>
-                                        <div>
-                                            <span className="report-result-date-text">25 Jan 2020</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="report-search-result-list card_rank">
-                                    <div style={{width:5, backgroundColor:'red', height:'auto'}} />
-                                    <div className="report-description">
-                                        <div className="report-result-title">
-                                            <span className="report-result-title-text">Completed making the changes in the description.</span>
-                                        </div>
-                                        <div>
-                                            <span className="report-result-date-text">25 Jan 2020</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="report-search-result-list card_rank">
-                                    <div style={{width:5, backgroundColor:'red', height:'auto'}} />
-                                    <div className="report-description">
-                                        <div className="report-result-title">
-                                            <span className="report-result-title-text">Completed making the changes in the description.</span>
-                                        </div>
-                                        <div>
-                                            <span className="report-result-date-text">25 Jan 2020</span>
-                                        </div>
-                                    </div>
-                                </div>
-
+                <div style={{marginBottom:10}} className="f-reports-main-text">Reports</div>
+                <div className="report-list">
+                    <div className="report-search-input-f">
+                        <img src={SearchIcon} alt="s" style={{marginRight:'10px'}} />
+                        <input className="report-search-element-f" type="text" name="Search" value="Search" style={{color:'#CBCBCB', }}/>
+                    </div>
+                    <div className="report-search-result-list card_rank">
+                        <div style={{width:5, backgroundColor:'red', height:'auto'}} />
+                        <div className="report-description">
+                            <div className="report-result-title">
+                                <span className="report-result-title-text-f">Completed making the changes in the description.</span>
+                            </div>
+                            <div>
+                                <span className="report-result-date-text-f">25 Jan 2020</span>
                             </div>
                         </div>
                     </div>
 
+                    <div className="report-search-result-list card_rank">
+                        <div style={{width:5, backgroundColor:'red', height:'auto'}} />
+                        <div className="report-description">
+                            <div className="report-result-title">
+                                <span className="report-result-title-text">Completed making the changes in the description.</span>
+                            </div>
+                            <div>
+                                <span className="report-result-date-text">25 Jan 2020</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="report-search-result-list card_rank">
+                        <div style={{width:5, backgroundColor:'red', height:'auto'}} />
+                        <div className="report-description">
+                            <div className="report-result-title">
+                                <span className="report-result-title-text">Completed making the changes in the description.</span>
+                            </div>
+                            <div>
+                                <span className="report-result-date-text">25 Jan 2020</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="report-search-result-list card_rank">
+                        <div style={{width:5, backgroundColor:'red', height:'auto'}} />
+                        <div className="report-description">
+                            <div className="report-result-title">
+                                <span className="report-result-title-text">Completed making the changes in the description.</span>
+                            </div>
+                            <div>
+                                <span className="report-result-date-text">25 Jan 2020</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="report-search-result-list card_rank">
+                        <div style={{width:5, backgroundColor:'red', height:'auto'}} />
+                        <div className="report-description">
+                            <div className="report-result-title">
+                                <span className="report-result-title-text">Completed making the changes in the description.</span>
+                            </div>
+                            <div>
+                                <span className="report-result-date-text">25 Jan 2020</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
+    }
+
+    render() {
+
+        return (
+            <div style={{display:'flex', flexDirection:'row', height:'100%'}}>
+                
+                <div className="desktop-faculty-report-search">
+                    {this.searchReport()}
+                </div>
+
+                <div className="report-details-f">
+    
+                    {this.SideBar()}
+
                     <div className="toggle_select_report" style={{marginBottom:20}}>
                         <span className="toggle-button" onClick={()=>{this.setState({sideBarToggle: true})}}>Toggle Report</span>
                     </div>
+
+                    
 
                     <div className="report-head">
                         <table>
@@ -105,36 +149,72 @@ class FacultyReport extends Component {
                     </div>
                     
                     <div className="card_rank mt20">
-                        <div className="card_inner_rank">
-                            <span>Description</span>
+                        <div 
+                            className="card_inner_rank"
+                            onClick={()=>{ this.setState(prevState => ({ descriptionToggle: !prevState.descriptionToggle }))}}
+                        >
+                            <span className="report-content-deader-f">Description</span>
                         </div>
-                        <div className="description-content">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                        </div>
+                        
+                            <Expand
+                                open={this.state.descriptionToggle}
+                                duration={500}
+                                transitions={["height", "opacity", "background"]}
+                            >
+                                <div className="description-content-f">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                                </div>
+                            </Expand>
+                        
                     </div>
 
                     <div className="card_rank mt20">
-                        <div className="card_inner_rank">
-                            <span>Attachment</span>
+                        <div className="card_inner_rank"
+                        onClick={()=>{ this.setState(prevState => ({ attachmentToggle: !prevState.attachmentToggle }))}}
+                        >
+                            <span className="report-content-deader-f">Attachment</span>
                         </div>
-                        <div className="description-content">
+                        <Expand
+                                open={this.state.attachmentToggle}
+                                duration={500}
+                                transitions={["height", "opacity", "background"]}
+                            >
+                            <div className="description-content-f">
                                 pdf gif .docx
-                        </div>
+                            </div>
+                        </Expand>
                     </div>
 
                     <div className="card_rank mt20">
                         <div className="card_inner_rank report-action">
-                            <div className="action_approve_btn">Approve</div>
-                            <div className="action_change_btn">Assign Changes</div>
-                            <div className="action_disapprove_btn">Disapprove</div>
+                            <div 
+                                className="action_approve_btn"
+                                onClick={()=>{ this.setState(prevState => ({ reasonToggle: !prevState.reasonToggle }))}}
+                            >Approve</div>
+                            <div 
+                                className="action_change_btn"
+                                onClick={()=>{ this.setState(prevState => ({ reasonToggle: !prevState.reasonToggle }))}}
+                            >Assign Changes</div>
+                            <div 
+                                className="action_disapprove_btn"
+                                onClick={()=>{ this.setState(prevState => ({ reasonToggle: !prevState.reasonToggle }))}}
+                            >Disapprove</div>
                         </div>
-                        <div className="description-content">
-                                <span>Disapprove Reason</span>
+                        
+                            <Expand
+                                open={this.state.reasonToggle}
+                                duration={500}
+                                transitions={["height", "opacity", "background"]}
+                            >
+                            <div className="description-content-f">
+                                <span className="report-content-deader-f">Description</span>
                                 <div className="action-input-element mt10">
                                     <input className="reason_input" type="text" name="reason" value="Search" style={{color:'#CBCBCB', }}/>
                                     <span className="action_disapprove_btn bg_primary">Submit</span>
                                 </div>
-                        </div>
+                                </div>
+                            </Expand>
+                        
                     </div>
 
                     <div className="card_rank mt20">
@@ -154,7 +234,7 @@ class FacultyReport extends Component {
                         </table>
                     </div>
                 </div>
-            </>
+            </div>
         );
     }
 }

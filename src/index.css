@@ -11,3 +11,24 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@font-face {
+  font-family: 'Sailec-Bold';
+  src: local('Sailec-Bold'), url('./fonts/Sailec Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Sailec-Light';
+  src: local('Sailec-Light'), url('./fonts/Sailec Light.ttf') format('truetype');
+}
+
+
+@font-face {
+  font-family: 'Sailec-Medium';
+  src: local('Sailec-Medium'), url('./fonts/Sailec Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Sailec-Thin';
+  src: local('Sailec-Thin'), url('./fonts/Sailec Thin.ttf') format('truetype');
+}

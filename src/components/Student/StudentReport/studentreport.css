@@ -24,7 +24,7 @@
   .sidenav a:hover {
     color: #f1f1f1;
   }
-  
+   
   .sidenav .closebtn {
     position: absolute;
     top: 0;
@@ -39,9 +39,12 @@
 
 .report-details{
     margin-top:10px;
-    margin-left: 30px;
-    margin-right: 30px;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 10vh;
+    display: flex;
+    flex-direction: column;
+    padding:20px
 }
 
 .report_title{
@@ -181,7 +184,7 @@
     overflow: hidden;
 }
 
-.toggle-button{
+.toggle-report-button{
     padding: 10px;
     background-color: #4DA1FF;
     color: white;
@@ -326,4 +329,67 @@ input:focus, textarea:focus, select:focus{
     font-size: 14px;
     border: 0px;
     outline: hidden;
+}
+
+.select-reports{
+    background: #FFFFFF;
+    box-shadow: 0 2px 9px 0 rgba(0,0,0,0.03);
+    border-radius: 6px;
+    width: 300px;
+    display: none;
+}
+
+.createReport{
+    display: flex;
+    flex-direction: column;
+}
+
+.create-report-setting-fields{
+    
+}
+
+.reportDetails{
+    padding: 20px;
+    width: 100%;
+}
+
+.report-details{
+    display: flex;
+    flex-direction: row;
+}
+
+
+
+@media (min-width: 1151px){
+    .toggle-report-button{
+        display: none;
+    }
+    .reportDetails{
+        width: 600px;
+        margin-left: 30px;
+        background-color: #fff;
+        padding: 20px;
+    }
+    .select-reports{
+        display: block;
+        padding: 20px;
+    }
+}
+
+@media (min-width: 768px){
+    .reportDetails{
+        width: 600px;
+        background-color: #fff;
+        padding: 20px;
+      
+        margin-left: 10px; 
+        border-radius: 5px;
+    }
+    .select-reports{
+        
+    }
+    .report-details{
+        margin-top: 0px;
+        padding: 30px;
+    }
 }

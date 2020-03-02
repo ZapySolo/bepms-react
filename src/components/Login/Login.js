@@ -94,11 +94,11 @@ class Login extends Component {
                                 </div>
 
                                 <div>
-                                    <input className="input-field" type="text" value="Email" />
+                                    <input className="login-input-field" type="text" value="Email" />
                                 </div>
                                 
                                 <div>
-                                    <input className="input-field" type="text" value="Password" />
+                                    <input className="login-input-field" type="text" value="Password" />
                                 </div>
                                 <div className="forgot-password-container">
                                     <div style={{backgroundColor:'#F5F8FA', paddingTop:5, paddingBottom:5, display:'flex', flexDirection:'row',justifyContent:'center', alignItems:'center'}}> 
@@ -130,10 +130,10 @@ class Login extends Component {
                                     </span>
                                 </div>
                                 <div>
-                                    <input className="input-field" type="text" value="Email" />
+                                    <input className="login-input-field" type="text" value="Email" />
                                 </div>
                                 <div>
-                                    <input className="input-field" type="text" value="Re-Enter Email" />
+                                    <input className="login-input-field" type="text" value="Re-Enter Email" />
                                 </div>
                                 <div style={{marginTop:20}}>
                                     <input className="login-submit" type="submit" value="Login" />
@@ -168,7 +168,7 @@ class Login extends Component {
                         </div>
 
                         <div className="login-instruction-main-gradient" />
-
+ 
                         <div className="login-instruction-main">
                             <div className="max-600" style={{display:'flex', flexDirection:'column', justifyContent:'space-between', height:'100%', width:'100%'}}>
                                 <div className="max-600" style={{margin:' 0px 20px', color:'white', marginBottom:0, height:'100%', justifyContent:'center', display:'flex', flexDirection:'column', marginTop:0}}>

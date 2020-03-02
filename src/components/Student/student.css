@@ -151,11 +151,10 @@
   }
 
   .currentSystem_content{
-        margin-top: 10px;
         padding:10px;
-        display: inline;
         border: 1px solid #E9EFF4;
-        width:70vw;
+        margin-top: 10px;
+        width: 100%;
         border-radius: 5px;
   }
 
@@ -433,7 +432,6 @@ border: 1px solid #E9EFF4;
     margin-top: 10px;
 }
 .left-navigator{
-    height: 100vh;
     width:111px;
     border-right: 1px solid #C5C5C5;
     background-color: #fff;
@@ -443,6 +441,7 @@ border: 1px solid #E9EFF4;
     height: 111px;
     width:100%;
     border-bottom: 1px solid #C5C5C5;
+    background-color: #fff;
 }
 
 .right-main{
@@ -451,7 +450,8 @@ border: 1px solid #E9EFF4;
 }
 
 .content-tablet{
-
+    margin:0px;
+    padding:0px;
 }
 
 .main-tablet{
@@ -473,12 +473,16 @@ border: 1px solid #E9EFF4;
 }
 
 .left-navigation-options{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
+
 }
 
+.select-projects{
+    background: #FFFFFF;
+    box-shadow: 0 2px 9px 0 rgba(0,0,0,0.03);
+    border-radius: 6px;
+    width: 300px;
+    display: none;
+}
 
 
 @media (min-width: 768px) {
@@ -511,6 +515,58 @@ border: 1px solid #E9EFF4;
     }
 }
 
-@media (min-width: 1144px){
+.navigation_title{
+    margin-left:10px;
+    font-family: Sailec-Medium;
+    font-size: 13px;
+    color: #656565;
+    letter-spacing: -0.19px;
+    display: none;
+}
+
+.navigation_icon_wrapper{
+    margin-top:30px;
+    display: flex;
+    padding-left:40px
+}
+
+@media (min-width: 1151px){
     /* Desktop */
+    .toggle_search_wrapper{
+        display: none;
+    }
+    .current-project-details{
+        margin:0px;
+        margin-left: 30px;
+        margin-right: 30px;
+    }
+    .select-projects{
+        margin-left: 0px;
+        display: block;
+    }
+    .studentName{
+        padding:30px;
+        display: flex;
+        flex-direction: row;
+    }
+    .selectProjects{
+        padding: 20px;
+    }
+    .currentSystem_content{
+        width: 238px;
+    }
+    .current_system_title{
+        width: 100%;
+    }
+    .current_system_position_name{
+        width: 100%;
+    }
+}
+@media (min-width: 1244px){
+    .navigation_title{
+        display: block;
+    }
+    .left-navigator{
+        width:246px;
+    }
 }
