@@ -16,7 +16,7 @@ class Setting extends Component {
                     <div className="profile-setting">
 
                         <div className="profile-image-setting">
-                            <div style={{height:100, width:100, position:'relative', marginBottom: 25, marginTop:20, backgroundColor:'red', textAlign:'center', borderRadius:50}}>
+                            <div style={{height:100, width:100, position:'relative', marginBottom: 25, marginTop:20, textAlign:'center', borderRadius:50}}>
                                 <img src="https://source.unsplash.com/random/100x100" alt="profile_img" style={{height:100, width:100 ,borderRadius:50}} />
                                 <div className="profile-edit">
                                     <span className="profile-edit-text">Edit</span>

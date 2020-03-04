@@ -126,7 +126,7 @@ class Faculty extends Component {
                                 <img src={SearchIcon} alt="s" style={{marginRight:'10px'}} />
                                 <input className="search_input_f" type="text" name="Search" value="Search" style={{color:'#CBCBCB'}}/>
                             </div>
-                            <div className="card_rank" className="faculty_search_toggle">
+                            <div className="faculty_search_toggle card_rank">
                                 <span 
                                     onClick={()=>{this.setState(({ searchTypeToggle: 'currentSystem'}))}}
                                     className={currentSystemClassName}>Current System</span>
@@ -234,7 +234,6 @@ class Faculty extends Component {
                     <div className="navigation">
                         <div className="navigation_button" onClick={()=>{this.setState({activeTab: 'home'})}}>Home</div>
                         <div className="navigation_button" onClick={()=>{this.setState({activeTab: 'report'})}}>Report</div>
-                        <div className="navigation_button" onClick={()=>{this.setState({activeTab: 'project'})}}>Project</div>
                         <div className="navigation_button" onClick={()=>{this.setState({activeTab: 'setting'})}}>Setting</div>
                         <div className="navigation_button" onClick={()=>{this.setState({activeTab: 'notification'})}}>Notif</div>
                     </div>
@@ -250,21 +249,21 @@ class Faculty extends Component {
                             <div style={{height:'111px' , width:'111px', display:'flex', justifyContent:'center', alignItems:'center'}}><img src={logo} height="30" alt="bepms"/></div>
                         </div>
                         <div className="left-navigation-options">
-                            <div className="navigation_icon_wrapper">
-                                <img src={HomepageIcon} />
-                                <span className="navigation_title" onClick={()=>{this.setState({activeTab: 'home'})}} >Homepage</span>
+                            <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'home'})}}>
+                                <img src={HomepageIcon} alt="Home" />
+                                <span className="navigation_title"  >Homepage</span>
                             </div>
-                            <div className="navigation_icon_wrapper">
-                                <img  src={HomepageIcon} />
-                                <span className="navigation_title" onClick={()=>{this.setState({activeTab: 'report'})}}>Reports</span>
+                            <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'report'})}}>
+                                <img  src={HomepageIcon} alt="Home" />
+                                <span className="navigation_title" >Reports</span>
                             </div>
-                            <div className="navigation_icon_wrapper">
-                                <img  src={HomepageIcon} />
-                                <span className="navigation_title" onClick={()=>{this.setState({activeTab: 'setting'})}}>Setting</span>
+                            <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'setting'})}}>
+                                <img  src={HomepageIcon} alt="Home" />
+                                <span className="navigation_title" >Setting</span>
                             </div>
-                            <div className="navigation_icon_wrapper">
-                                <img  src={HomepageIcon} />
-                                <span className="navigation_title" onClick={()=>{this.setState({activeTab: 'notification'})}}>Notifications</span>
+                            <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'notification'})}}>
+                                <img  src={HomepageIcon} alt="home" />
+                                <span className="navigation_title" >Notifications</span>
                             </div>
                         </div>
                     </div>

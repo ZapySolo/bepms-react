@@ -8,6 +8,8 @@ import Notification from '../Notification/Notification';
 import FolderIcon from '../../assets/images/folder_icon.png';
 import HomepageIcon from '../../homepage-logo.svg';
 
+import Modal from 'react-modal';
+
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
@@ -17,8 +19,19 @@ class Student extends Component {
         this.state = {
             sideBarToggle: false,
             activeTab: 'home',
-            sideBarWidth:'100vh'
+            sideBarWidth:'100vh',
+            modalIsOpen:false,
         };
+        this.handleOpenModal = this.handleOpenModal.bind(this);
+        this.handleCloseModal = this.handleCloseModal.bind(this);
+    }
+
+    handleOpenModal () {
+        this.setState({ modalIsOpen: true });
+    }
+      
+    handleCloseModal () {
+        this.setState({ modalIsOpen: false });
     }
 
     renderComponent = () => {
@@ -149,6 +162,25 @@ class Student extends Component {
        
         return(
             <div className="studentName">
+                <Modal
+                    isOpen={this.state.modalIsOpen}
+                    onRequestClose={this.handleCloseModal}
+                    className="student-modal-content"
+                    overlayClassName="student-modal-overlay"
+                    >
+                    <div>
+                        <div style={{display:'flex',flexDirection:'row', justifyContent:'space-between', height:30,padding:10}}>
+                            <span>Attachments</span>
+                            <button onClick={this.handleCloseModal}>Close</button>
+                        </div>
+                        <div style={{width:'100%', height:'100%', padding:'10px', display:'flex', flexDirection:'row', flexWrap:'wrap'}}>
+                            <img src={FolderIcon} alt="folderIcon" style={{height:100, width:100, margin:5}}/>
+                            <img src={FolderIcon} alt="folderIcon" style={{height:100, width:100, margin:5}}/>
+                            <img src={FolderIcon} alt="folderIcon" style={{height:100, width:100, margin:5}}/>
+                        </div>
+                    </div>
+                    
+                </Modal>
                 <div className="toggle_search_wrapper">
                     <div className="drawer_toggle" style={{flexDirection:'row', justifyContent:'flex-start', width:'100%'}}>
                         <span className="font30" onClick={()=>{this.setState({sideBarToggle: true})}}>&#9776;</span>
@@ -171,7 +203,9 @@ class Student extends Component {
                         </div>
                         <div className="card_rank project-options-elements">
                             <div className="project-action">
-                                <span className="project-action-text">Attachments</span>
+                                <span 
+                                    onClick={this.handleOpenModal}
+                                    className="project-action-text">Attachments</span>
                             </div>
                             <div className="project-action">
                                 <span className="project-action-text">To-Do</span>
@@ -270,19 +304,19 @@ class Student extends Component {
                     </div>
                     <div className="left-navigation-options">
                         <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'home'})}}>
-                            <img src={HomepageIcon}  />
+                            <img src={HomepageIcon}  alt="home"/>
                             <span className="navigation_title">Homepage</span>
                         </div>
                         <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'report'})}}>
-                            <img  src={HomepageIcon} />
+                            <img  src={HomepageIcon} alt="home"/>
                             <span className="navigation_title">Reports</span>
                         </div>
                         <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'setting'})}}>
-                            <img  src={HomepageIcon} />
+                            <img  src={HomepageIcon} alt="home"/>
                             <span className="navigation_title">Setting</span>
                         </div>
                         <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'notification'})}}>
-                            <img  src={HomepageIcon} />
+                            <img  src={HomepageIcon} alt="home"/>
                             <span className="navigation_title">Notifications</span>
                         </div>
                     </div>

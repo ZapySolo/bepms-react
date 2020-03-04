@@ -130,6 +130,9 @@
     font-size: 13px;
     outline: none;
     border: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .forgot-password{
@@ -196,13 +199,16 @@
     font-size: 31px;
     color: #FFFFFF;
     letter-spacing: -0.39px;
+    line-height: 40px;
 }
 
 .itp-2{
     font-family: Sailec-Bold;
     font-size: 38px;
     color: #FFFFFF;
+    line-height: 40px;
     letter-spacing: -0.47px;
+    margin-top: 10px;
 }
 
 .itp-3{
