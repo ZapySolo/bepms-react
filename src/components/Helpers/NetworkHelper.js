@@ -8,47 +8,26 @@ export default class NetworkHelper{
             instance = this;
         }
 
-        this.url = "";
         this.method = "post";
         this.data = {};
-        this.contentType = "application/json";
-        this.header = {};
-        this.domain = "localhost";
-        this.pathToApi = "/bepms/api/";
+        this.domain = "http://www.zapy.tech/";
+        this.pathToApi = "projects/bepms-ci/api/";
+
+        //axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
         return instance;
     }
 
     setApiPath(api){
         this.url = this.domain + this.pathToApi + api;
     }
-    setMethod(method){
-        this.method = method;
-    }
     setData(data){
         this.data = data;
     }
-    setContentType(contentType){
-        this.contentType = contentType;
-    }
-    setHeaderAutohrization(authorizationToken){
-        this.header['Authorization'] = authorizationToken;
-    }
 
     execute(successHandler, errorHandler, networkHandler) {
-        var requestParam;
-        if(this.method.toLowerCase() === "get"){
-            requestParam = {
-                method : this.method
-            };
-        } else {
-            requestParam = {
-                body: this.data
-            };
-        }
-        
-        axios.post(this.url, requestParam.body, this.header)
+        axios.post(this.url, this.data)
           .then((response) => {
-
+            console.log(response);
             var status = response.status.toString();
 
             switch (status) {
@@ -76,21 +55,27 @@ export default class NetworkHelper{
           }
         )
         .catch(function(err) {
-            console.log('catch executed in network base class and error is '+err);
+            console.log(err);
+
             if (err instanceof TypeError) {
                 if (err.message === 'Network request failed') {
                     console.log('error is network error');
                     networkHandler();
                 }
                 else {
-                errorHandler("Something went wrong", err.response.status);
+                errorHandler("Something wentt wrong ");//, err.response.status);
                 }
             } else {
-                if(err.response.status===401){
-                    errorHandler("Wrong Credentials", err.response.status);
-                }else{
-                    errorHandler("Something went wrong", err.response.status);
+                try{
+                    if(err.response.status===401){
+                        errorHandler("Wrong Credentials");//, err.response.status);
+                    }else{
+                        errorHandler("Something went wrong");//, err.response.status);
+                    }
+                } catch {
+                    errorHandler(err+' ',);
                 }
+                
             }          
         });      
     }
