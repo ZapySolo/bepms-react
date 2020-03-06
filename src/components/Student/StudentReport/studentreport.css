@@ -238,6 +238,9 @@ input:focus, textarea:focus, select:focus{
 
 .field-input-text-area-element{
     margin-top: 10px;
+    border: 0px;
+    height: 90%;
+    width: 99%;
 }
 
 .field-input-textarea{

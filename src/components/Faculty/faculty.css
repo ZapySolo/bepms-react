@@ -165,13 +165,12 @@
   .currentSystem_content_f{
         margin-top: 10px;
         padding:10px;
-        display: inline;
         border: 1px solid #E9EFF4;
-        width:70vw;
         border-radius: 5px;
   }
 
   .change_position{
+        margin-top: 5px;
         padding:5px 10px;
         background: #F5F8FA;
         color: #99A2AC;
@@ -187,6 +186,10 @@
     letter-spacing: 0;
   }
 
+  .uppercase{
+    text-transform: uppercase;
+  }
+
   .current_system_position_name{
     display: block;
     margin-top: 7px;
@@ -194,6 +197,7 @@
     font-size: 12px;
     color: #323C47;
     letter-spacing: 0.11px;
+    text-transform: uppercase;
   }
 
   .change_position_text_f{

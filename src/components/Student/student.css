@@ -151,11 +151,10 @@
       flex-direction: column;
   }
 
-  .currentSystem_content{
+  .currentSystem_content_s{
         padding:10px;
         border: 1px solid #E9EFF4;
         margin-top: 10px;
-        width: 100%;
         border-radius: 5px;
   }
 
@@ -175,6 +174,7 @@
     margin-top: 7px;
       font-weight: lighter;
       color: #323C47;
+      text-transform: capitalize;
   }
 
   .other_system_title{
@@ -507,6 +507,9 @@ border: 1px solid #E9EFF4;
     width: 100%;
 }
 
+.mb-10{
+    margin-bottom: 10px;
+}
 
 @media (min-width: 768px) {
     /** Tablets and above */
@@ -596,9 +599,6 @@ border: 1px solid #E9EFF4;
     }
     .selectProjects{
         padding: 20px;
-    }
-    .currentSystem_content{
-        width: 238px;
     }
     .current_system_title{
         width: 100%;

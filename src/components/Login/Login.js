@@ -9,8 +9,6 @@ import ReactCardFlip from 'react-card-flip';
 
 import NetworkHelper from '../Helpers/NetworkHelper';
 
-import Loader from '../../assets/bepms-loading.gif';
-
 //<img src={require('../../assets/bepms-loading.gif')} alt="loading..." />
 class Login extends Component {
     constructor(props) {
@@ -21,11 +19,12 @@ class Login extends Component {
             loginType:'student',//student, faculty
             loginPage:'system',//system, admin
             userEmail: 'leader@gmail.com',
-            userPassword: '000'
+            reEnterEmail:'',
+            userPassword: '000',
+            loginError:false
         };
         this.handleClick = this.handleClick.bind(this);
         this.handleClick2 = this.handleClick2.bind(this);
-        // localStorage.setItem('rememberMe', true);
     }
 
     handleClick(e) {
@@ -40,44 +39,47 @@ class Login extends Component {
 
     doLogin = ()=> {
 
-        this.setState({ showLoading: true });
-
-        //console.log(localStorage.getItem('rememberMe'));
-
-        var networkHelper = new NetworkHelper();
-
-        if(this.state.loginPage==='system' && this.state.loginType === 'student'){
-
-            let data = {
-                email:this.state.userEmail,
-                password:this.state.userPassword,
-                login_as:this.state.loginType
-            }
-
-            networkHelper.setMethod('post');
-            networkHelper.setData(data);
+        this.setState({ showLoading: true ,loginError:false});
+        
+        if(this.state.loginPage==='system' && (this.state.loginType === 'student' || this.state.loginType === 'faculty')){
+            
+            var networkHelper = new NetworkHelper();
+            networkHelper.setData('email', this.state.userEmail);
+            networkHelper.setData('password', this.state.userPassword);
+            networkHelper.setData('login_as', this.state.loginType);
             networkHelper.setApiPath('systemLogin');
 
-            networkHelper.execute(function (response) {
+            networkHelper.execute((response) => {
                 if (response.status === 200){
-                    console.log(response);
-                    //localStorage.setItem('token', response.data.data.access_token);
-                    this.setState({showLoading:false,userEmail:'',password:'',errors:''});
-                    this.props.history.push('/student');
+                    console.log(response.data.data.access_token);
+                    sessionStorage.setItem('token', response.data.data.access_token);
+                    this.setState({showLoading:false,userEmail:'',userPassword:''});
+                    this.props.history.push('/'+this.state.loginType);
                 }
-            },  (errorMsg,StatusCode) => {
-                alert(errorMsg+StatusCode);
-                this.setState({ showLoading: false });
+            }, (errorMsg,StatusCode) => {
+                //if status code is 401 then credentials are wrong
+                if(StatusCode === 401){
+                    this.setState({ showLoading: false, loginError:true });
+                } else {
+                    alert(errorMsg);
+                    this.setState({ showLoading: false });
+                }
             }, () => {
-                alert("ERROR OCCURED");
+                alert("SERVER ERROR OCCURED, if this continues please contact your admin");
                 this.setState({ showLoading: false })
             });
 
-        } else if (this.state.loginPage==='system' && this.state.loginType === 'faculty'){
-            this.setState({activescreen: 'faculty'});
         } else if (this.state.loginPage==='admin'){
             this.setState({activescreen: 'admin'});
         }
+    }
+
+
+    doForgotPassword = () => {
+        this.setState({ showLoading: true })
+        setTimeout(()=>{
+            this.setState({ showLoading: false })
+        },1000);
     }
     
     submitButton = () => {
@@ -89,6 +91,18 @@ class Login extends Component {
             <input className="login-submit" type="submit" value="Login" onClick={()=>{this.doLogin()}} />
         </>;
     }
+
+    submitForgotPasswordButton = () => {
+        return (this.state.showLoading) ? <>
+            <div className="login-submit" style={{marginTop:20}}>
+                <img src={require('../../assets/bepms-loading.gif')} alt="loading..." width={35} height={35} />
+            </div>
+        </> : <>
+            <input className="login-submit" style={{marginTop:20}} type="submit" value="Login" onClick={()=>{this.doForgotPassword()}} />
+        </>;
+    }
+
+
 
     login_form = ()=>{
         let activeLoginTypeStyle={
@@ -111,6 +125,10 @@ class Login extends Component {
             letterSpacing: 0,
         }
 
+        let errorInputStyle = (this.state.loginError)?{
+            border: "1px solid #FC577A"
+        } : {}
+
         if(this.state.loginPage === 'system'){
             
             return (
@@ -128,11 +146,24 @@ class Login extends Component {
                                     </div>
     
                                     <div>
-                                        <input className="login-input-field" type="text" value="Email" />
+                                        <input 
+                                            onChange={(event)=>{this.setState({userEmail: event.target.value})}}
+                                            className="login-input-field"
+                                            style={errorInputStyle}
+                                            type="text" 
+                                            placeholder="Email"
+                                            value={this.state.userEmail}
+                                            />
                                     </div>
                                     
                                     <div>
-                                        <input className="login-input-field" type="text" value="Password" />
+                                        <input 
+                                            onChange={(event)=>{this.setState({userPassword: event.target.value})}}
+                                            className="login-input-field"
+                                            style={errorInputStyle}
+                                            type="text" 
+                                            value={this.state.userPassword}
+                                        />
                                     </div>
                                     <div className="forgot-password-container">
                                         <div style={{backgroundColor:'#F5F8FA', paddingTop:5, paddingBottom:5, display:'flex', flexDirection:'row',justifyContent:'center', alignItems:'center'}}> 
@@ -164,13 +195,17 @@ class Login extends Component {
                                         </span>
                                     </div>
                                     <div>
-                                        <input className="login-input-field" type="text" value="Email" />
+                                        <input 
+                                            onChange={(event)=>{this.setState({userEmail: event.target.value})}}
+                                            className="login-input-field" type="text" value={this.state.userEmail} />
                                     </div>
                                     <div>
-                                        <input className="login-input-field" type="text" value="Re-Enter Email" />
+                                        <input 
+                                            onChange={(event)=>{this.setState({reEnterEmail: event.target.value})}}
+                                            className="login-input-field" type="text" value={this.state.reEnterEmail} />
                                     </div>
-                                    <div style={{marginTop:20}}>
-                                        <input className="login-submit" type="submit" value="Login" />
+                                    <div>
+                                        {this.submitForgotPasswordButton()}
                                     </div>
                                     <div style={{textAlign:"center", marginTop:15, color: '#FFD012',fontSize: '13px', letterSpacing: '-0.16px'}}>
                                         <span onClick={this.handleClick}>Back to login</span>
@@ -200,11 +235,24 @@ class Login extends Component {
                                     </div>
     
                                     <div>
-                                        <input className="login-input-field" type="text" value="Email" />
+                                        <input 
+                                            onChange={(event)=>{this.setState({userEmail: event.target.value})}}
+                                            className="login-input-field"
+                                            style={errorInputStyle}
+                                            type="text" 
+                                            placeholder="Email"
+                                            value={this.state.userEmail}
+                                            />
                                     </div>
                                     
                                     <div>
-                                        <input className="login-input-field" type="text" value="Password" />
+                                        <input 
+                                            onChange={(event)=>{this.setState({userPassword: event.target.value})}}
+                                            className="login-input-field"
+                                            style={errorInputStyle}
+                                            type="text" 
+                                            value={this.state.userPassword}
+                                        />
                                     </div>
                                     <div className="forgot-password-container" style={{justifyContent:'flex-end'}}>
                                         <span className="forgot-password" onClick={this.handleClick}>Forgot password?</span>
@@ -228,14 +276,16 @@ class Login extends Component {
                                         </span>
                                     </div>
                                     <div>
-                                        <input className="login-input-field" type="text" value="Email" />
+                                        <input 
+                                            onChange={(event)=>{this.setState({userEmail: event.target.value})}}
+                                            className="login-input-field" type="text" value={this.state.userEmail} />
                                     </div>
                                     <div>
-                                        <input className="login-input-field" type="text" value="Re-Enter Email" />
+                                        <input 
+                                            onChange={(event)=>{this.setState({reEnterEmail: event.target.value})}}
+                                            className="login-input-field" type="text" value={this.state.reEnterEmail} />
                                     </div>
-                                    <div style={{marginTop:20}}>
-                                        <input className="login-submit" type="submit" value="Login" />
-                                    </div>
+                                    {this.submitForgotPasswordButton()}
                                     <div style={{textAlign:"center", marginTop:15, color: '#FFD012',fontSize: '13px', letterSpacing: '-0.16px'}}>
                                         <span onClick={this.handleClick}>Back to Admin login</span>
                                     </div>
@@ -291,7 +341,7 @@ class Login extends Component {
                             </div>
                         </div>
 
-                        <div class="desktop-login-cxc" style={{width:'100%', height:'100%', marginRight:'50px', backgroundImage: `url(${loginDoodle})`, overflow:'hidden'}} >
+                        <div className="desktop-login-cxc" style={{width:'100%', height:'100%', marginRight:'50px', backgroundImage: `url(${loginDoodle})`, overflow:'hidden'}} >
                             {this.login_form()}
                         </div>
 

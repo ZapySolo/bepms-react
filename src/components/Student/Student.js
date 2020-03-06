@@ -8,10 +8,10 @@ import Notification from '../Notification/Notification';
 import FolderIcon from '../../assets/images/folder_icon.png';
 import HomepageIcon from '../../homepage-logo.svg';
 
-import Modal from 'react-modal';
-
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+
+import NetworkHelper from '../Helpers/NetworkHelper';
 
 class Student extends Component {
     constructor(props) {
@@ -21,9 +21,53 @@ class Student extends Component {
             activeTab: 'home',
             sideBarWidth:'100vh',
             modalIsOpen:false,
+            fetchedProjectList:'',
+            activeProject:'',
+            fetchedProjectDetails:{},
+            projectTab:'details', //details, attachments, todo
+            currentProjectID:'',
+            currentProjectPosition:''
         };
         this.handleOpenModal = this.handleOpenModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
+    }
+
+    componentDidMount(){
+        this.getProjectList();
+    }
+
+    getProjectList = () => {
+
+        var networkHelper = new NetworkHelper();
+
+        networkHelper.setData('Authorization', sessionStorage.getItem('token'));
+        networkHelper.setApiPath('studentProjectList');
+
+        networkHelper.execute((response) => {
+            if (response.status === 200){
+                let data = response.data.data;
+                if(data === []){
+                    this.setState({showLoading:false, fetchedProjectList: data});
+                } else {
+                    try{
+                        this.setState({showLoading:false, fetchedProjectList: data, activeProject: data[0]});
+                        data = data[0];
+                        this.getProjectDetailsByProjectId(data.project_id);
+                        this.setState({currentProjectID:data.project_id, currentProjectPosition:data.project_position_name});
+                    } catch {
+
+                    }
+                }
+            }
+        }, (errorMsg, StatusCode) => {
+            if(StatusCode === 401){
+                alert(errorMsg);
+            } else {
+                alert(errorMsg);
+            }
+        }, () => {
+            alert("SERVER ERROR OCCURED");
+        });
     }
 
     handleOpenModal () {
@@ -40,7 +84,7 @@ class Student extends Component {
                 return this.StudentHome();
              
             case 'report':
-                return <StudentReport />;
+                return <StudentReport project_id={this.state.currentProjectID} project_position_name={this.state.currentProjectPosition}/>;
               
             case 'setting':
                 return <StudentSetting />;
@@ -53,84 +97,101 @@ class Student extends Component {
         }
     }
 
-    ProgressBar = () => {
-        let percentage = 70;
-
+    ProgressBar = (project_status = 0) => {
+        project_status = parseInt(project_status);
         return (
             <CircularProgressbar
-                value={percentage}
-                text={`${percentage}%`}
+                value={project_status}
+                text={`${project_status}%`}
                 styles={{
-                    root: {
-                        height:'150px'
-                    },
+                    root: { height:'150px' },
                     path: {
                         stroke: `rgba(46, 212, 122, 100)`,
-                        // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
                         strokeLinecap: 'butt',
-                        // Customize transition animation
                         transition: 'stroke-dashoffset 0.5s ease 0s',
-                        // Rotate the path
                         transform: 'rotate(0.25turn)',
                         transformOrigin: 'center center',
                     },
-                    // Customize the circle behind the path, i.e. the "total progress"
                     trail: {
-                        // Trail color
                         stroke: '#F7685B',
-                        // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
                         strokeLinecap: 'butt',
-                        // Rotate the trail
                         transform: 'rotate(0.25turn)',
                         transformOrigin: 'center center',
                     },
-                        // Customize the text
                     text: {
-                        // Text color
                         fill: '#000',
-                        // Text size
                         fontSize: '16px',
-                        
                     },
-                    // Customize background - only used when the `background` prop is true
-                    background: {
-                        fill: '#3e98c7',
-                    },
+                    background: { fill: '#3e98c7' },
                 }}
             />
         );
     }
 
+    changeActiveProjectToId = (project_id) => {
+        let projectList = this.state.fetchedProjectList;
+        let activeProject = this.state.activeProject;
+        let flag = false;
+        let positionName;
+        projectList.forEach((element, key) => {
+            if(element.project_id === project_id){
+                if(JSON.stringify(element) !== JSON.stringify(activeProject)){
+                    this.setState({activeProject: element});
+                    flag = true;
+                    positionName = element.project_position_name;
+                }
+            }
+        });
+        if(flag){
+            this.getProjectDetailsByProjectId(project_id);
+            this.setState({sideBarToggle:false});
+            this.setState({currentProjectID:project_id, currentProjectPosition:positionName});
+        }
+    }
+
+    currentProject = (activeProject) => {
+        return (
+            <>
+                <div key={"cs_c_mn_"+1} className="currentSystem_content_s">
+                    <span key={"csoic_c_"+2} className="current_system_title">{activeProject.project_name}</span>
+                    <span key={"cs_kjbc_c_"+3} className="current_system_position_name">Your Position: {activeProject.project_position_name}</span>
+                </div>
+            </>
+        );
+    }
+
+    otherProjects = (otherProjects) => {
+        if(Array.isArray(otherProjects)){
+            let render = otherProjects.map((element, key) => {
+                let project_id = element.project_id;
+                let project_name = element.project_name;
+                return <>
+                    <div key={"cs_c_c_"+key} className="currentSystem_content_s" onClick={()=>{this.changeActiveProjectToId(project_id)}}>
+                        <div key={"o_s_t_"+key} className="other_system_title">
+                            <div key={"fic_"+key} className="folderIconContainer">
+                                <img key={"fi_afkj"+key} src={FolderIcon} alt="folder_icon" height="28" />
+                            </div>
+                            <div key={"ost_"+key} className="otherSystemTitle">{project_name}</div>
+                        </div>
+                    </div>
+                </>
+            });
+            return render;
+        }
+    }
+
     SelectProjects = ()=> {
+        let fetchedProjectList = this.state.fetchedProjectList;
+        let activeProject = this.state.activeProject;
         return (
             <div className="selectProjects">
                 <div className="currentSystem">
                     <span>Your Current Project</span>
-                    <div className="currentSystem_content">
-                        <span className="current_system_title">Medical Drone</span>
-                        <span className="current_system_position_name">Your Position: Leader</span>
-                    </div>
+                    {this.currentProject(activeProject)}
                 </div>
                 <div className="currentSystem" style={{marginTop:20}}>
-                    <span>Other Project</span>
-                    <div className="currentSystem_content">
-                        <div className="other_system_title">
-                            <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
-                            <div className="otherSystemTitle">Desmensia The Pilla manager</div>
-                        </div>
-                    </div>
-                    <div className="currentSystem_content">
-                        <div className="other_system_title">
-                            <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
-                            <div className="otherSystemTitle">Mega Moga Manger</div>
-                        </div>
-                    </div>
-                    <div className="currentSystem_content">
-                        <div className="other_system_title">
-                            <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
-                            <div className="otherSystemTitle">I ran Out of names manager</div>
-                        </div>
-                    </div>
+                    <span>All Project</span>
+                    {this.otherProjects(fetchedProjectList)}
                 </div>
             </div>
         );
@@ -138,13 +199,11 @@ class Student extends Component {
 
     SideBar = () => {
         let sidebarWidth = '100vw';
-        
         if(window.innerWidth >= 450) {
             sidebarWidth = (!this.state.sideBarToggle)?'0px':'450px';
         } else {
             sidebarWidth = (!this.state.sideBarToggle)?'0px':'100vw';
         }
-        
         return (
             <div className="sidenav" style={{width:sidebarWidth}}>
                 <div className="sidebar_content">
@@ -158,29 +217,163 @@ class Student extends Component {
         );
     }
 
-    StudentHome = () => {
-       
-        return(
-            <div className="studentName">
-                <Modal
-                    isOpen={this.state.modalIsOpen}
-                    onRequestClose={this.handleCloseModal}
-                    className="student-modal-content"
-                    overlayClassName="student-modal-overlay"
-                    >
+    getProjectDetailsByProjectId = (project_id)=>{
+
+        var networkHelper = new NetworkHelper();
+
+        networkHelper.setData('Authorization', sessionStorage.getItem('token'));
+        networkHelper.setData('project_id', project_id);
+        networkHelper.setApiPath('studentProjectDetails');
+
+        networkHelper.execute((response) => {
+            if (response.status === 200){
+                let data = response.data.data;
+                this.setState({showLoading:false, fetchedProjectDetails: data[0]});
+                console.log(this.state.fetchedProjectDetails);
+            }
+        }, (errorMsg, StatusCode) => {
+            if(StatusCode === 401){
+                alert(errorMsg);
+            } else {
+                alert(errorMsg);
+            }
+        }, () => {
+            alert("SERVER ERROR OCCURED");
+        });
+    }
+
+    projectDetails = ()=>{
+        let fetchedProjectDetails = this.state.fetchedProjectDetails;
+
+        if(Object.keys(fetchedProjectDetails).length < 1){
+            return <>No Project Selected</>;
+        }
+        let project_name = fetchedProjectDetails.project_name || 'N.A';
+        let project_description = fetchedProjectDetails.project_description || 'N.A';
+        let project_status = fetchedProjectDetails.project_status || 0;
+        let project_members = fetchedProjectDetails.project_members || [];
+
+        let project_member_render = project_members.map((element, key) => {
+            let member_name = element.user_display_name;
+            let member_profile_img = element.user_profile_image;
+            let member_position_name = element.project_position_name;
+            return <>
+                <div key={'mp'+key} className="member-profie mb10">
+                    <div key={'md'+key} className="member-detail">
+                        <img key={'mpimg'+key} src={member_profile_img} alt="profile" className="member-profile-img" />
+                        <span key={'sml'+key} style={{marginLeft:10}} >{member_name}</span>
+                    </div>
+                    <div key={'mp_X'+key} className="member-position">
+                        <span key={'pdvt'+key} className="project-description-value-text">{member_position_name}</span>
+                    </div>
+                </div>
+            </>
+        });
+
+        let details = (<>
+            <div className="project-header">
+                <span className="project-title-text">{project_name}</span>
+            </div>
+
+            <div className="project-description-rank card_rank">
+                <div className="project-description-key">
+                    <span className="project-description-key-text">Description</span>
+                </div>
+                <div className="project-description-value">
+                    <span className="project-description-value-text">{project_description}</span>
+                </div>
+            </div>
+
+            <div className="project-description-rank card_rank">
+                <div className="project-description-key">
+                    <span className="project-description-key-text">Project Status</span>
+                </div>
+                <div className="project-description-value">
+                    {this.ProgressBar(project_status)}
+                </div>
+            </div>
+
+            <div className="project-member-rank card_rank">
+
+                <div className="project-description-key">
+                    <span className="project-description-key-text">Members</span>
+                </div>
+
+                <div className="project-description-value project-member-value">
+                    {project_member_render}
+                </div>
+
+            </div>
+        </>);
+
+        let attachments = (<>
+            <div style={{width:'100%', height:'100%', padding:'10px', display:'flex', flexDirection:'row', flexWrap:'wrap'}}>
+                <img src={FolderIcon} alt="folderIcon" style={{height:100, width:100, margin:5}}/>
+                <img src={FolderIcon} alt="folderIcon" style={{height:100, width:100, margin:5}}/>
+                <img src={FolderIcon} alt="folderIcon" style={{height:100, width:100, margin:5}}/>
+            </div>
+        </>);
+
+        let todo = (<>
+            ToDo has not been implemented
+        </>);
+
+        let edit = (<>
+            Edit your project here
+        </>);
+
+        let xxx = (<></>);
+        if(this.state.projectTab === 'details') xxx = details;
+        else if (this.state.projectTab === 'attachments') xxx = attachments;
+        else if (this.state.projectTab === 'todo') xxx = todo;
+        else if (this.state.projectTab === 'edit') xxx = edit;
+
+        return (<>
+                <div className="project-image">
+                    <div className="cover-image-padd" style={{height:'170px', width:'100%'}}>
+                        <img src="https://source.unsplash.com/random/400x200" style={{objectFit:"cover"}} height="170px" width="100%" alt="profile" />
+                    </div>
+                </div>
+                <div className="project-options">
                     <div>
-                        <div style={{display:'flex',flexDirection:'row', justifyContent:'space-between', height:30,padding:10}}>
-                            <span>Attachments</span>
-                            <button onClick={this.handleCloseModal}>Close</button>
-                        </div>
-                        <div style={{width:'100%', height:'100%', padding:'10px', display:'flex', flexDirection:'row', flexWrap:'wrap'}}>
-                            <img src={FolderIcon} alt="folderIcon" style={{height:100, width:100, margin:5}}/>
-                            <img src={FolderIcon} alt="folderIcon" style={{height:100, width:100, margin:5}}/>
-                            <img src={FolderIcon} alt="folderIcon" style={{height:100, width:100, margin:5}}/>
+                        <div className="project-profile-img">
+                            <img className="project-profile-img-element" src="https://source.unsplash.com/random/100x100" alt="profile" />
                         </div>
                     </div>
-                    
-                </Modal>
+                    <div className="card_rank project-options-elements">
+                        <div
+                            onClick={()=>this.setState({projectTab:'details'})} 
+                            className="project-action">
+                            <span className="project-action-text">Details</span>
+                        </div>
+                        <div 
+                            onClick={()=>this.setState({projectTab:'attachments'})}
+                            className="project-action">
+                            <span className="project-action-text">Attachments</span>
+                        </div>
+                        <div
+                            onClick={()=>this.setState({projectTab:'todo'})}
+                            className="project-action">
+                            <span className="project-action-text">To-Do</span>
+                        </div>
+                        <div
+                            onClick={()=>this.setState({projectTab:'edit'})}
+                            className="project-action">
+                            <span className="project-action-text">Edit</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="project-section-2">
+                    {xxx}
+                </div>
+        </>);
+    }
+
+    StudentHome = () => {
+
+        return(
+            <div className="studentName">
                 <div className="toggle_search_wrapper">
                     <div className="drawer_toggle" style={{flexDirection:'row', justifyContent:'flex-start', width:'100%'}}>
                         <span className="font30" onClick={()=>{this.setState({sideBarToggle: true})}}>&#9776;</span>
@@ -190,91 +383,14 @@ class Student extends Component {
                     {this.SelectProjects()}
                 </div>
                 <div className="current-project-details">
-                    <div className="project-image">
-                        <div className="cover-image-padd" style={{height:'170px', width:'100%'}}>
-                            <img src="https://source.unsplash.com/random/400x200" style={{objectFit:"cover"}} height="170px" width="100%" alt="profile" />
-                        </div>
-                    </div>
-                    <div className="project-options">
-                        <div>
-                            <div className="project-profile-img">
-                                <img className="project-profile-img-element" src="https://source.unsplash.com/random/100x100" alt="profile" />
-                            </div>
-                        </div>
-                        <div className="card_rank project-options-elements">
-                            <div className="project-action">
-                                <span 
-                                    onClick={this.handleOpenModal}
-                                    className="project-action-text">Attachments</span>
-                            </div>
-                            <div className="project-action">
-                                <span className="project-action-text">To-Do</span>
-                            </div>
-                            <div className="project-action">
-                                <span className="project-action-text">More</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="project-section-2">
-                        <div className="project-header">
-                            <span className="project-title-text">Medical Drone</span>
-                        </div>
-
-                        <div className="project-description-rank card_rank">
-                            <div className="project-description-key">
-                                <span className="project-description-key-text">Description</span>
-                            </div>
-                            <div className="project-description-value">
-                                <span className="project-description-value-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>
-                            </div>
-                        </div>
-
-                        <div className="project-description-rank card_rank">
-                            <div className="project-description-key">
-                                <span className="project-description-key-text">Project Status</span>
-                            </div>
-                            <div className="project-description-value">
-                                {this.ProgressBar()}
-                            </div>
-                        </div>
-
-                        <div className="project-member-rank card_rank">
-
-                            <div className="project-description-key">
-                                <span className="project-description-key-text">Members</span>
-                            </div>
-
-                            <div className="project-description-value project-member-value">
-                                <div className="member-profie">
-                                    <div className="member-detail">
-                                        <img src="https://source.unsplash.com/random/200x200" alt="member-propfile" className="member-profile-img" />
-                                        <span style={{marginLeft:10}} >Jayesh Nautiya</span>
-                                    </div>
-                                    <div className="member-position">
-                                        <span className="project-description-value-text">Leader</span>
-                                    </div>
-                                </div>
-
-                                <div className="member-profie mt10">
-                                    <div className="member-detail">
-                                        <img src="https://source.unsplash.com/random/200x200" alt="member-propfile" className="member-profile-img" />
-                                        <span style={{marginLeft:10}} >Jayesh Nautiya</span>
-                                    </div>
-                                    <div className="member-position">
-                                        <span className="project-description-value-text">Member</span>
-                                    </div>
-                                </div>
-                
-                            </div>
-
-                        </div>
-                    </div>
+                    {this.projectDetails()}
                 </div>
             </div>
         );
     }
 
     render() {
+
         return (
             <>
             {this.SideBar()}
@@ -323,13 +439,10 @@ class Student extends Component {
                 </div>
 
                 <div className="right-main">
-                    <div className="tablet-banner">
-                
-                    </div>
+                    <div className="tablet-banner"> </div>
                     <div className="content-tablet" style={{height:window.innerHeight-111, overflow:'scroll'}}>
                         {this.renderComponent()}
                     </div>
-
                 </div>
 
             </div>
@@ -340,3 +453,23 @@ class Student extends Component {
 
 
 export default Student;
+
+
+/* <Modal
+    isOpen={this.state.modalIsOpen}
+    onRequestClose={this.handleCloseModal}
+    className="student-modal-content"
+    overlayClassName="student-modal-overlay"
+    >
+    <div>
+        <div style={{display:'flex',flexDirection:'row', justifyContent:'space-between', height:30,padding:10}}>
+            <span>Attachments</span>
+            <button onClick={this.handleCloseModal}>Close</button>
+        </div>
+        <div style={{width:'100%', height:'100%', padding:'10px', display:'flex', flexDirection:'row', flexWrap:'wrap'}}>
+            <img src={FolderIcon} alt="folderIcon" style={{height:100, width:100, margin:5}}/>
+            <img src={FolderIcon} alt="folderIcon" style={{height:100, width:100, margin:5}}/>
+            <img src={FolderIcon} alt="folderIcon" style={{height:100, width:100, margin:5}}/>
+        </div>
+    </div>
+</Modal> */

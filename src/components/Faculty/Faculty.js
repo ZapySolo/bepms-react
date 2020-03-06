@@ -10,14 +10,54 @@ import FacultySetting from '../Setting/Setting';
 import FacultyProject from './FacultyProject/FacultyProject';
 import FacultyNotification from '../Notification/Notification';
 
+import NetworkHelper from '../Helpers/NetworkHelper';
+
 class Faculty extends Component {
     constructor(props) {
         super(props);
         this.state = {
             sideBarToggle: false,
             activeTab: 'home',
-            searchTypeToggle:'currentSystem'
+            searchTypeToggle:'currentSystem', //currentSystem, allSystem
+            fetchedSystemList:'',
+            activeSystem:'',
+            activeSystemPositionName:'',
+            searchInput:'',//home screen search bar
+            searchResultProject:'',//homepage search result
+            searchResultReport:'',//homepage search result
         };
+    }
+    componentDidMount(){
+        this.getSystemList();
+    }
+
+    getSystemList = () => {
+        var networkHelper = new NetworkHelper();
+
+        networkHelper.setData('Authorization', sessionStorage.getItem('token'));
+        networkHelper.setApiPath('facultySystemList');
+
+        networkHelper.execute((response) => {
+            if (response.status === 200){
+                let data = response.data.data;
+                this.setState({showLoading:false, fetchedSystemList: data});
+                try{
+                    let data0 = data[0];
+                    this.setState({activeSystem: data0});
+                    this.submitSearch();
+                } catch {
+
+                }  
+            }
+        }, (errorMsg, StatusCode) => {
+            if(StatusCode === 401){
+                alert(errorMsg);
+            } else {
+                alert(errorMsg);
+            }
+        }, () => {
+            alert("SERVER ERROR OCCURED");
+        });
     }
 
     renderComponent = () => {
@@ -64,42 +104,149 @@ class Faculty extends Component {
         );
     }
 
+    currentSystemRender(activeSystem){
+        if(!activeSystem) return ;
+
+        let positions = activeSystem.project_position_name;
+
+        if(!this.state.activeSystemPositionName || !positions.includes(this.state.activeSystemPositionName)){
+            this.setState({activeSystemPositionName: positions[0]})
+        }
+
+
+        let currentSystemRender = <>
+            <div className="currentSystem_content_f">
+                <span className="current_system_title">{activeSystem.system_name}</span>
+                <span className="current_system_position_name">Your Position:<span className="uppercase">{this.state.activeSystemPositionName}</span></span>
+            </div>
+        </>;
+        
+        let changePositionRender = positions.map((element, key) => {
+            if(this.state.activeSystemPositionName !== element){
+                return <>
+                    <div className="currentSystem_content_f change_position" 
+                    onClick={()=>{
+                        this.setState({activeSystemPositionName:element});
+                        this.submitSearch();
+                    }}>
+                        <span className="change_position_text_f">Change Your Position To {element}</span>
+                    </div>
+                </>;
+            }
+        });
+
+        return <>
+            <div className="currentSystem">
+                <span className="your-current-system-text-f">Your Current System</span>
+                {currentSystemRender}
+                {changePositionRender}
+            </div>
+        </>;
+    }
+
+    allSystemRender = (allSystems) => {
+        if(!allSystems || !Array.isArray(allSystems)) return ;
+        let render = allSystems.map((element, key)=>{
+            return <>
+                <div className="currentSystem_content_f" onClick={()=>{
+                        if(!this.state.activeSystem === element) this.setState({activeSystem:element})
+                    }}>
+                    <div className="other_system_title">
+                        <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
+                        <div className="otherSystemTitle">{element.system_name}</div>
+                    </div>
+                </div>
+            </>;
+        });
+        return render;
+    }
+
     SelectSystem = ()=> {
         return (
             <>
-                <div className="currentSystem">
-                    <span className="your-current-system-text-f">Your Current System</span>
-                    <div className="currentSystem_content_f">
-                        <span className="current_system_title">Computer Department 2020</span>
-                        <span className="current_system_position_name">Your Position: HOD</span>
-                    </div>
-                    <div className="currentSystem_content_f change_position">
-                        <span className="change_position_text_f">Change Your Position</span>
-                    </div>
-                </div>
+                {this.currentSystemRender(this.state.activeSystem)}
                 <div className="currentSystem" style={{marginTop:20}}>
-                    <span className="your-current-system-text-f">Other System</span>
-                    <div className="currentSystem_content_f">
-                        <div className="other_system_title">
-                            <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
-                            <div className="otherSystemTitle">Computer Department 2021</div>
-                        </div>
-                    </div>
-                    <div className="currentSystem_content_f">
-                        <div className="other_system_title">
-                            <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
-                            <div className="otherSystemTitle">Computer Department 2022</div>
-                        </div>
-                    </div>
-                    <div className="currentSystem_content_f">
-                        <div className="other_system_title">
-                            <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
-                            <div className="otherSystemTitle">Computer Department 2023</div>
-                        </div>
-                    </div>
+                    <span className="your-current-system-text-f">All System</span>
+                    {this.allSystemRender(this.state.fetchedSystemList)}
                 </div>
             </>
         );
+    }
+
+    submitSearch = () => {
+        let activeSystem = this.state.activeSystem;
+        if(!activeSystem) return ;
+
+        var networkHelper = new NetworkHelper();
+
+        networkHelper.setData('Authorization', sessionStorage.getItem('token'));
+        networkHelper.setData('search_input', this.state.searchInput);
+        if(this.state.searchTypeToggle === 'currentSystem'){
+            networkHelper.setData('system_id', activeSystem.system_id);
+        }
+        networkHelper.setData('user_position', this.state.activeSystemPositionName);
+        networkHelper.setApiPath('facultyHomeProjectAndReports');
+
+        networkHelper.execute((response) => {
+            if (response.status === 200){
+                let data = response.data.data;
+                this.setState({searchResultProject:data.project, searchResultReport:data.report});
+            }
+        }, (errorMsg, StatusCode) => {
+            if(StatusCode === 401){
+                alert(errorMsg);
+            } else {
+                alert(errorMsg);
+            }
+        }, () => {
+            alert("SERVER ERROR OCCURED");
+        });
+
+    }
+
+    renderProjectList = (searchResultProject = []) => {
+        if(!searchResultProject) return ;
+
+        let render = searchResultProject.map((element, key)=>{
+            return <>
+                <div className="project card_rank">
+                    <div>
+                        <img src="https://source.unsplash.com/random/150x100"  alt="project_img" style={{borderRadius:5}} height='100' width='150' />
+                    </div>
+                    <div className="project-title-text-f">{element.project_name}</div>
+                    <div className="project-leader-text-f">{element.leader_display_name}</div>
+                </div>
+            </>;
+        });
+        return render;
+    }
+
+    renderReportList = (searchResultReport = []) => { //remaining, need to change the api data
+        if(!searchResultReport) return ;
+
+        let pendingDiv;
+
+        let render = searchResultReport.map((element, key)=>{
+            pendingDiv = (element.report_status_user === 'pending') ? <div className="report_status_pending" /> : <></>;
+            return <>
+                <div className="report_x card_rank">
+                    <div className="report-wrapper-xzx">
+                        <div className="report-project-img">
+                            <img alt="project_img" src="https://source.unsplash.com/random/40x40" height="40" width="40" style={{borderRadius:20}} />
+                        </div>
+
+                        <div className="report-description">
+                            <span className="report-project-name-text-f">{element.project_name}<span className="report-project-name-text-f-date"> • {element.report_creation_date}</span></span>
+                            <span className="report-leader-name-text-f">{element.leader_display_name}</span>
+                            <span className="report-description-text-f">{element.report_description}</span>
+                        </div>
+                        {pendingDiv}
+                    </div>
+                </div>
+            </>;
+        });
+
+        return render;
     }
 
     FacultyHome = () => {
@@ -114,7 +261,7 @@ class Faculty extends Component {
 
                 <div className="desktop-home-select-system-f">
                     {this.SelectSystem()}
-                </div>
+                </div> 
                 
                 <div className="xvxbx">
                     <div className="toggle_search_wrapper_x">
@@ -124,7 +271,11 @@ class Faculty extends Component {
                         <div className="search_field-fs">
                             <div className="search-field-container-f">
                                 <img src={SearchIcon} alt="s" style={{marginRight:'10px'}} />
-                                <input className="search_input_f" type="text" name="Search" value="Search" style={{color:'#CBCBCB'}}/>
+                                <input
+                                    onKeyDown = {(event)=>{if(event.key === 'Enter'){this.submitSearch()}}}
+                                    onChange={(e)=>{this.setState({searchInput: e.target.value})}}
+                                    className="search_input_f" type="text"
+                                    placeholder="Search" value={this.state.searchInput} style={{color:'#CBCBCB'}}/>
                             </div>
                             <div className="faculty_search_toggle card_rank">
                                 <span 
@@ -140,79 +291,13 @@ class Faculty extends Component {
                         <div className="project_result">
                             <span className="project_text_f">Projects</span>
                             <div className="project_result_container">
-                                <div className="project card_rank">
-                                    <div>
-                                        <img src="https://source.unsplash.com/random/150x100"  alt="project_img" style={{borderRadius:5}} height='100' width='150' />
-                                    </div>
-                                    <div className="project-title-text-f">Hotel Booking</div>
-                                    <div className="project-leader-text-f">Sakane Miko</div>
-                                </div>
-                                <div className="project card_rank">
-                                    <div>
-                                        <img src="https://source.unsplash.com/random/150x100"  alt="project_img" style={{borderRadius:5}} height='100' width='150' />
-                                    </div>
-                                    <div className="project-title-text-f">Hotel Booking</div>
-                                    <div className="project-leader-text-f">Sakane Miko</div>
-                                </div>
-                                <div className="project card_rank">
-                                    <div>
-                                        <img src="https://source.unsplash.com/random/150x100"  alt="project_img" style={{borderRadius:5}} height='100' width='150' />
-                                    </div>
-                                    <div className="project-title-text-f">Hotel Booking</div>
-                                    <div className="project-leader-text-f">Sakane Miko</div>
-                                </div>
+                                {this.renderProjectList(this.state.searchResultProject)}
                             </div>
                         </div>
                         <div className="report_result">
                             <span className="project_text_f">Reports</span>
                             <div className="reports_result_container">
-
-                                
-
-                            <div className="report_x card_rank">
-                                    <div className="report-wrapper-xzx">
-                                        <div className="report-project-img">
-                                            <img alt="project_img" src="https://source.unsplash.com/random/40x40" height="40" width="40" style={{borderRadius:20}} />
-                                        </div>
-
-                                        <div className="report-description">
-                                            <span className="report-project-name-text-f">Project Name<span className="report-project-name-text-f-date"> • date.now</span></span>
-                                            <span className="report-leader-name-text-f">Leader Name</span>
-                                            <span className="report-description-text-f">report descriptionreport descriptionreport descriptionreport description</span>
-                                        </div>
-                                        <div className="report_status_pending" />
-                                    </div>
-                                </div>
-
-                                <div className="report_x card_rank">
-                                    <div className="report-wrapper-xzx">
-                                        <div className="report-project-img">
-                                            <img alt="project_img" src="https://source.unsplash.com/random/40x40" height="40" width="40" style={{borderRadius:20}} />
-                                        </div>
-
-                                        <div className="report-description">
-                                            <span className="report-project-name-text-f">Project Name<span className="report-project-name-text-f-date"> • date.now</span></span>
-                                            <span className="report-leader-name-text-f">Leader Name</span>
-                                            <span className="report-description-text-f">report descriptionreport descriptionreport descriptionreport description</span>
-                                        </div>
-                                        <div className="report_status_pending" />
-                                    </div>
-                                </div>
-
-                                <div className="report_x card_rank">
-                                    <div className="report-wrapper-xzx">
-                                        <div className="report-project-img">
-                                            <img alt="project_img" src="https://source.unsplash.com/random/40x40" height="40" width="40" style={{borderRadius:20}} />
-                                        </div>
-
-                                        <div className="report-description">
-                                            <span className="report-project-name-text-f">Project Name<span className="report-project-name-text-f-date"> • date.now</span></span>
-                                            <span className="report-leader-name-text-f">Leader Name</span>
-                                            <span className="report-description-text-f">report descriptionreport descriptionreport descriptionreport description</span>
-                                        </div>
-                                        <div className="report_status_pending" />
-                                    </div>
-                                </div>
+                                {this.renderReportList(this.state.searchResultReport)}
                             </div>
                         </div>
                     </div>
