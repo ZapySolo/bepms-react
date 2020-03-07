@@ -37,7 +37,7 @@ class Setting extends Component {
             networkHelper.setData('user_confirm_email', this.state.edit_re_user_email);
         }
 
-        if(this.state.edit_user_mobile !== this.state.edit_user_mobile)
+        if(this.state.user_mobile !== this.state.edit_user_mobile)
             networkHelper.setData('user_mobile', this.state.edit_user_mobile);
 
         if(this.state.edit_user_password && (this.state.edit_user_password === this.state.edit_re_user_password)){

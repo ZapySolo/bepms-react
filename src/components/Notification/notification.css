@@ -1,0 +1,55 @@
+.notification-wrapper{
+    padding: 15px 30px;
+}
+
+.notification-header{
+    margin: 10px 0px;
+}
+
+.notification-header-text{
+    font-family: Sailec-Medium;
+    font-size: 25px;
+    color: #233539;
+    letter-spacing: -1.09px;
+}
+
+.notification_element{
+    display: flex;
+    flex-direction: row;
+    padding:10px;
+    justify-content: space-between;
+}
+
+.notification-title{
+    font-family: Sailec-Medium;
+    font-size: 14.5px;
+    color: #323C47;
+    letter-spacing: 0;
+    margin-bottom: 5px;
+}
+
+.notification-date{
+    font-family: Sailec-Medium;
+    font-size: 9px;
+    color: #989898;
+    letter-spacing: 0.08px;
+}
+
+.notification-action{
+    font-family: Sailec-Medium;
+    font-size: 12.5px;
+    color: #323C47;
+    letter-spacing: 0;
+}
+
+.notification-container{
+    margin-top: 10px;
+}
+
+.notification-list{
+    overflow: scroll;
+}
+
+.notification-action{
+    margin:0px 5px;
+}

@@ -306,6 +306,12 @@ input:focus, textarea:focus, select:focus{
     border: 1px solid #E9EFF4;
 }
 
+.field-input-element_attachment{
+    margin-top: 10px;
+    padding-left: 0px;
+    border: 0px;
+}
+
 .input-field{
     margin-top: 10px;
 }
@@ -394,5 +400,8 @@ input:focus, textarea:focus, select:focus{
     .report-details{
         margin-top: 0px;
         padding: 30px;
+    }
+    .field-input-text-area-element{
+        padding-left: 15px;
     }
 }

@@ -66,7 +66,10 @@ class Faculty extends Component {
                 return this.FacultyHome();
              
             case 'report':
-                return <FacultyReport />;
+                let activeSystem = this.state.activeSystem;
+                let activeSystemId = activeSystem.system_id;
+                let activeSystemPositionName = this.state.activeSystemPositionName;
+                return <FacultyReport system_id={activeSystemId} system_position={activeSystemPositionName} />;
               
             case 'setting':
                 return <FacultySetting />;
@@ -127,11 +130,15 @@ class Faculty extends Component {
                     <div className="currentSystem_content_f change_position" 
                     onClick={()=>{
                         this.setState({activeSystemPositionName:element});
-                        this.submitSearch();
+                        setTimeout(()=>{
+                            this.submitSearch();
+                        }, 100);
                     }}>
                         <span className="change_position_text_f">Change Your Position To {element}</span>
                     </div>
                 </>;
+            } else {
+                return <></>;
             }
         });
 
@@ -176,7 +183,7 @@ class Faculty extends Component {
     submitSearch = () => {
         let activeSystem = this.state.activeSystem;
         if(!activeSystem) return ;
-
+        
         var networkHelper = new NetworkHelper();
 
         networkHelper.setData('Authorization', sessionStorage.getItem('token'));
@@ -186,7 +193,7 @@ class Faculty extends Component {
         }
         networkHelper.setData('user_position', this.state.activeSystemPositionName);
         networkHelper.setApiPath('facultyHomeProjectAndReports');
-
+        console.log('findinig p&r for user position:: '+this.state.activeSystemPositionName+' by search ==='+this.state.searchInput);
         networkHelper.execute((response) => {
             if (response.status === 200){
                 let data = response.data.data;
@@ -211,7 +218,7 @@ class Faculty extends Component {
             return <>
                 <div className="project card_rank">
                     <div>
-                        <img src="https://source.unsplash.com/random/150x100"  alt="project_img" style={{borderRadius:5}} height='100' width='150' />
+                        <img src="https://source.unsplashh.com/random/150x100"  alt="project_img" style={{borderRadius:5}} height='100' width='150' />
                     </div>
                     <div className="project-title-text-f">{element.project_name}</div>
                     <div className="project-leader-text-f">{element.leader_display_name}</div>
@@ -232,7 +239,7 @@ class Faculty extends Component {
                 <div className="report_x card_rank">
                     <div className="report-wrapper-xzx">
                         <div className="report-project-img">
-                            <img alt="project_img" src="https://source.unsplash.com/random/40x40" height="40" width="40" style={{borderRadius:20}} />
+                            <img alt="project_img" src="https://source.unsplashh.com/random/40x40" height="40" width="40" style={{borderRadius:20}} />
                         </div>
 
                         <div className="report-description">

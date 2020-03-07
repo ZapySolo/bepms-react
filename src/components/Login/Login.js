@@ -9,6 +9,11 @@ import ReactCardFlip from 'react-card-flip';
 
 import NetworkHelper from '../Helpers/NetworkHelper';
 
+import {withRouter} from 'react-router';
+
+const baseUrl = process.env.PUBLIC_URL;
+
+
 //<img src={require('../../assets/bepms-loading.gif')} alt="loading..." />
 class Login extends Component {
     constructor(props) {
@@ -54,7 +59,16 @@ class Login extends Component {
                     console.log(response.data.data.access_token);
                     sessionStorage.setItem('token', response.data.data.access_token);
                     this.setState({showLoading:false,userEmail:'',userPassword:''});
-                    this.props.history.push('/'+this.state.loginType);
+                    console.log('redirecting to ...'+baseUrl+'/'+this.state.loginType)
+                    try{
+                        this.props.history.push(baseUrl+'/'+this.state.loginType);
+                    } catch {
+                        if(typeof window !== 'undefined'){
+                            console.log('using the window method');
+                            window.location.href = (baseUrl+'/'+this.state.loginType);
+                        }
+                    }
+                    
                 }
             }, (errorMsg,StatusCode) => {
                 //if status code is 401 then credentials are wrong
@@ -70,7 +84,8 @@ class Login extends Component {
             });
 
         } else if (this.state.loginPage==='admin'){
-            this.setState({activescreen: 'admin'});
+            //this.setState({activescreen: 'admin'});
+            this.props.history.push('/admin');
         }
     }
 
@@ -303,6 +318,7 @@ class Login extends Component {
     }
 
     render(){
+        console.log('baseUrl==>',baseUrl);
         return (
             <div className="main">
 
@@ -352,4 +368,4 @@ class Login extends Component {
     }
 }
 
-export default Login;
+export default withRouter(Login);
