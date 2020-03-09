@@ -258,8 +258,32 @@ class FacultyReport extends Component {
         }
     }
     submitModifyAction = () => {
-        alert('Modify action has not been implemnted yet!');
-        console.log('Modify action has not been implemnted yet!');
+        let report_id = this.state.activeReportId;
+        if(!report_id && report_id !== 0) return ;
+
+        var networkHelper = new NetworkHelper();
+        networkHelper.setData('Authorization', sessionStorage.getItem('token'));
+        networkHelper.setData('system_id', this.props.system_id);
+        networkHelper.setData('project_position_name', this.props.system_position);
+        networkHelper.setData('report_id', report_id);
+        networkHelper.setData('report_change_assign', this.state.modifyReason);
+        console.log('1-'+this.props.system_id+'-2'+this.props.system_position+'-3-'+report_id+'-4-'+this.state.modifyReason);
+        networkHelper.setApiPath('facultyAssignChangesReport');
+
+        networkHelper.execute((response) => {
+            if (response.status === 200){
+                this.fetchedReportDetails();
+                alert('report has been assigned for modifications');
+            }
+        }, (errorMsg, StatusCode) => {
+            if(StatusCode === 401){
+                alert(errorMsg);
+            } else {
+                alert(errorMsg);
+            }
+        }, () => {
+            alert("SERVER ERROR OCCURED");
+        });
     }
 
     renderActionResaonBox = () => {

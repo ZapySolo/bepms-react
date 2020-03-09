@@ -19,11 +19,10 @@ class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            activescreen: 'login', //
             isFlipped: false,
             loginType:'student',//student, faculty
-            loginPage:'system',//system, admin
-            userEmail: 'leader@gmail.com',
+            loginPage:'admin',//system, admin
+            userEmail: '21nikhilpatil1998@gmail.com',
             reEnterEmail:'',
             userPassword: '000',
             loginError:false
@@ -83,9 +82,31 @@ class Login extends Component {
                 this.setState({ showLoading: false })
             });
 
-        } else if (this.state.loginPage==='admin'){
-            //this.setState({activescreen: 'admin'});
-            this.props.history.push('/admin');
+        } else if (this.state.loginPage==='admin'){ 
+
+            var networkHelper = new NetworkHelper();
+            networkHelper.setData('email', this.state.userEmail);
+            networkHelper.setData('password', this.state.userPassword);
+            networkHelper.setApiPath('adminLogin');
+
+            networkHelper.execute((response) => {
+                if (response.status === 200){
+                    sessionStorage.setItem('token', response.data.data.access_token);
+                    this.setState({showLoading:false,userEmail:'',userPassword:''});
+                    this.props.history.push(baseUrl+'/'+this.state.loginPage);
+                }
+            }, (errorMsg,StatusCode) => {
+                //if status code is 401 then credentials are wrong
+                if(StatusCode === 401){
+                    this.setState({ showLoading: false, loginError:true });
+                } else {
+                    alert(errorMsg);
+                    this.setState({ showLoading: false });
+                }
+            }, () => {
+                alert("SERVER ERROR OCCURED, if this continues please contact your admin");
+                this.setState({ showLoading: false })
+            });
         }
     }
 

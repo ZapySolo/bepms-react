@@ -346,10 +346,15 @@ class StudentReport extends Component {
                                 <th className="table-head-text">HOD</th>
                             </tr>
                             <tr className="position-status">
-                                <td className="table-status-text">sent</td>
-                                <td className="table-status-text">pending</td>
-                                <td className="table-status-text">---</td>
-                                <td className="table-status-text">---</td>
+                                <td className="table-status-text">{
+                                    (activeProjectDetails.report_status_guide === 'modify' ||
+                                     activeProjectDetails.report_status_pc === 'modify' || 
+                                     activeProjectDetails.report_status_hod === 'modify'
+                                     ) ? 'pending' : 'sent'}
+                                </td>
+                                <td className="table-status-text">{activeProjectDetails.report_status_guide}</td>
+                                <td className="table-status-text">{activeProjectDetails.report_status_pc}</td>
+                                <td className="table-status-text">{activeProjectDetails.report_status_hod}</td>
                             </tr>
                         </tbody>
                     </table>
