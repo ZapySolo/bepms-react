@@ -8,16 +8,21 @@ import Admin from './components/Admin/Admin';
 
 import { BrowserRouter, Route } from "react-router-dom";
 
-function App() {  
-    const baseUrl = process.env.PUBLIC_URL;
-    console.log(baseUrl);
+let basePath = '';
+
+function App() {
+  if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    basePath = '';
+  } else {
+    basePath = '/bepms';
+  }
   return (
     <BrowserRouter>
-      <Route path={baseUrl+"/login"} component={Login}/>
-      <Route path={baseUrl+"/"} exact component={Login}/>
-      <Route path={baseUrl+"/faculty"} exact component={Faculty}/>
-      <Route path={baseUrl+"/student"} exact component={Student}/>
-      <Route path={baseUrl+"/admin"} exact component={Admin}/>
+      <Route path={basePath+"/login"} exact component={Login}/>
+      <Route path={basePath+"/"} exact component={Login}/>
+      <Route path={basePath+"/faculty"} exact component={Faculty}/>
+      <Route path={basePath+"/student"} exact component={Student}/>
+      <Route path={basePath+"/admin"} exact component={Admin}/>
     </BrowserRouter>
   );
 }

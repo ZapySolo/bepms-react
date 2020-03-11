@@ -18,7 +18,14 @@ class AdminSystem extends Component {
             systemSearchInput:'',//input value for search input
             fetchedSystemList:'',//storing the fetched list of system
             activeSystemProjects:'',
-            activeSystem:''
+            activeSystem:'',
+            newSystemName:'',//input for creating new system
+            newSystemDescription:'',//input for creating new system
+            newProjectHODEmail:'',//input for creating new project
+            newProjectPCEmail:'',//input for creating new project
+            newProjectGuideEmail:'',//input for creating new project
+            newProjectLeaderEmail:'',//input for creating new project
+            newProjectMemberEmail:[],//input for creating new project
         };
     }
 
@@ -74,17 +81,7 @@ class AdminSystem extends Component {
         });
     }
 
-    expandBoxComponent = () => {
-        //actions === 'addNewSystem editSystem addNewProject editProject'
-        //return expanding components
-
-        if(this.state.toggleToAction === 'addNewSystem'){
-            return this.createNewSystem();
-        }
-
-        return <>Something went wrong</>;
-    }
-
+    
     toggleExpandingBox = (type)=>{
         if(!this.state.modifyActionDropboxtoggle){
             this.setState(prevState => ({ modifyActionDropboxtoggle: true, toggleToAction:type }));
@@ -98,68 +95,346 @@ class AdminSystem extends Component {
         }
     }
 
-    createNewSystem = () => {
-        return(
-            <>
-                <div className="system-search-title mt-10">Add New System/Edit</div>
+    projectMemberEmailInput = () => {
+        let newProjectMemberEmail = this.state.newProjectMemberEmail || [];
+        let render = newProjectMemberEmail.map((element, key)=>{
+            //element -> member email
+            //key is index, start at 0
+            return <>
+                <div className="admin-input-component">
+                <div className="admin-input-label" style={{display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
+                    <span>Member {key+1} Email</span>
+                    <span onClick={()=>{
+                        let x = newProjectMemberEmail;
+                        x.splice(key, 1);
+                        this.setState({newProjectMemberEmail:x});
+                    }}>X</span>
+                </div>
+                <div className="admin-input-field-box">
+                    <input 
+                        onChange={(e)=>{
+                            let x = newProjectMemberEmail;
+                            x[key] = e.target.value;
+                            this.setState({newSystemName: x})
+                        }}
+                        className="admin-input-element" type="text" 
+                        placeholder={"eg. member"+(key+1)+'@gmail.com'} value={element} />
+                </div>
+                <div className="input-warning">Invalid email</div>
+            </div>
+            </>;
+        });
+
+        return render;
+    }
+
+    addNewProject = () => {
+        let activeSystem = this.state.activeSystem;
+        return <>
+            <div className="system-search-title mt-10">Add New Project</div>
+                <div className="cgdn">Adding New Project in System: {activeSystem.system_name}</div>
 
                 <div className="admin-input-component">
-                    <div className="admin-input-label">Label</div>
+                    <div className="admin-input-label">HOD Email</div>
                     <div className="admin-input-field-box">
-                        <input className="admin-input-element" type="text" value="eg. Computer Department 2020" />
+                        <input 
+                            onChange={(e)=>{this.setState({newProjectHODEmail: e.target.value})}}
+                            className="admin-input-element" type="text" 
+                            placeholder="eg. Computer Department 2020" value={this.state.newProjectHODEmail} />
                     </div>
-                    <div className="input-warning">input warning</div>
+                    <div className="input-warning">Invalid email</div>
                 </div>
 
                 <div className="admin-input-component">
-                    <div className="admin-input-label">Label</div>
+                    <div className="admin-input-label">PC Email</div>
                     <div className="admin-input-field-box">
-                        <input className="admin-input-element" type="text" value="eg. Computer Department 2020" />
+                        <input 
+                            onChange={(e)=>{this.setState({newProjectPCEmail: e.target.value})}}
+                            className="admin-input-element" type="text" 
+                            placeholder="eg. Computer Department 2020" value={this.state.newProjectPCEmail} />
                     </div>
-                    <div className="input-warning">input warning</div>
+                    <div className="input-warning">Invalid email</div>
                 </div>
 
                 <div className="admin-input-component">
-                    <div className="admin-input-label">Label</div>
+                    <div className="admin-input-label">Guide Email</div>
                     <div className="admin-input-field-box">
-                        <input className="admin-input-element" type="text" value="eg. Computer Department 2020" />
+                        <input 
+                            onChange={(e)=>{this.setState({newProjectGuideEmail: e.target.value})}}
+                            className="admin-input-element" type="text" 
+                            placeholder="eg. Computer Department 2020" value={this.state.newProjectGuideEmail} />
                     </div>
-                    <div className="input-warning">input warning</div>
+                    <div className="input-warning">Invalid email</div>
+                </div>
+
+                <div className="admin-input-component">
+                    <div className="admin-input-label">Leader Email</div>
+                    <div className="admin-input-field-box">
+                        <input 
+                            onChange={(e)=>{this.setState({newProjectLeaderEmail: e.target.value})}}
+                            className="admin-input-element" type="text" 
+                            placeholder="eg. Computer Department 2020" value={this.state.newProjectLeaderEmail} />
+                    </div>
+                    <div className="input-warning">Invalid email</div>
+                </div>
+
+                {this.projectMemberEmailInput()}
+
+                <div
+                    onClick={()=>{
+                        let membersEmail = this.state.newProjectMemberEmail;
+                        membersEmail.push('member@domain.com');
+                        this.setState({projectMemberEmailInput: membersEmail});
+                    }}
+                    className="admin-input-component" style={{textAlign:'center'}}>
+                    <div className="admin-input-label" style={{padding:'10px 20px',border:'1px solid black', borderRadius:5}}>+ Add Member</div>
                 </div>
 
                 <div className="admin-input-component mt-10">
-                    <div className="admin-input-submit-button">
+                    <div
+                        onClick={()=>{this.submitNewProject()}}
+                        className="admin-input-submit-button">
                         Submit
                     </div>
                 </div>
+        </>;
+    } 
+
+    editProjectDetails = () => {
+        let activeSystem = this.state.activeSystem;
+        return <>
+            <div className="system-search-title mt-10">Edit Project</div>
+                <div className="cgdn">Editing Project in System: {activeSystem.system_name}</div>
+
+                <div className="admin-input-component">
+                    <div className="admin-input-label">HOD Email</div>
+                    <div className="admin-input-field-box">
+                        <input 
+                            onChange={(e)=>{this.setState({newProjectHODEmail: e.target.value})}}
+                            className="admin-input-element" type="text" 
+                            placeholder="eg. Computer Department 2020" value={this.state.newProjectHODEmail} />
+                    </div>
+                    <div className="input-warning">Invalid email</div>
+                </div>
+
+                <div className="admin-input-component">
+                    <div className="admin-input-label">PC Email</div>
+                    <div className="admin-input-field-box">
+                        <input 
+                            onChange={(e)=>{this.setState({newProjectPCEmail: e.target.value})}}
+                            className="admin-input-element" type="text" 
+                            placeholder="eg. Computer Department 2020" value={this.state.newProjectPCEmail} />
+                    </div>
+                    <div className="input-warning">Invalid email</div>
+                </div>
+
+                <div className="admin-input-component">
+                    <div className="admin-input-label">Guide Email</div>
+                    <div className="admin-input-field-box">
+                        <input 
+                            onChange={(e)=>{this.setState({newProjectGuideEmail: e.target.value})}}
+                            className="admin-input-element" type="text" 
+                            placeholder="eg. Computer Department 2020" value={this.state.newProjectGuideEmail} />
+                    </div>
+                    <div className="input-warning">Invalid email</div>
+                </div>
+
+                <div className="admin-input-component">
+                    <div className="admin-input-label">Leader Email</div>
+                    <div className="admin-input-field-box">
+                        <input 
+                            onChange={(e)=>{this.setState({newProjectLeaderEmail: e.target.value})}}
+                            className="admin-input-element" type="text" 
+                            placeholder="eg. Computer Department 2020" value={this.state.newProjectLeaderEmail} />
+                    </div>
+                    <div className="input-warning">Invalid email</div>
+                </div>
+
+                {this.projectMemberEmailInput()}
+
+                <div
+                    onClick={()=>{
+                        let membersEmail = this.state.newProjectMemberEmail;
+                        membersEmail.push('member@domain.com');
+                        this.setState({projectMemberEmailInput: membersEmail});
+                    }}
+                    className="admin-input-component" style={{textAlign:'center'}}>
+                    <div className="admin-input-label" style={{padding:'10px 20px',border:'1px solid black', borderRadius:5}}>+ Add Member</div>
+                </div>
+
+                <div className="admin-input-component mt-10">
+                    <div
+                        onClick={()=>{this.submitNewProject()}}
+                        className="admin-input-submit-button">
+                        Submit
+                    </div>
+                </div>
+        </>;
+    }
+
+    submitNewProject = () => {
+        let activeSystem = this.state.activeSystem;
+        console.log('adding new project to system_id => '+activeSystem.system_id+'\n');
+        console.log('HOD => '+this.state.newProjectHODEmail+'\nPC => '+this.state.newProjectPCEmail+'\n Guide => '+this.state.newProjectGuideEmail);
+        console.log('Leader => '+this.state.newProjectLeaderEmail+'\nmember => '+this.state.newProjectMemberEmail);
+    }
+
+    expandBoxComponent = () => {
+        //actions === 'addNewSystem editSystem addNewProject editProject'
+        //return expanding components
+
+        if(this.state.toggleToAction === 'addNewSystem')
+            return this.createNewSystem();
+        else if (this.state.toggleToAction === 'editSystem')
+            return this.editSystem();
+        else if(this.state.toggleToAction === 'addNewProject')
+            return this.addNewProject();
+        else if(this.state.toggleToAction === 'editProject')
+            return this.editProjectDetails();
+        return <></>;
+    }
+
+    submitEditProject = () => {
+        alert('api pending!');
+    }
+
+    editSystem = ()=> {
+        let activeSystem = this.state.activeSystem;
+        return <>
+            <div className="system-search-title mt-10">Change System Details</div>
+                <div className="cgdn">Editing system: {activeSystem.system_name}</div>
+                <div className="admin-input-component">
+                    <div className="admin-input-label">System Name</div>
+                    <div className="admin-input-field-box">
+                        <input 
+                            onChange={(e)=>{this.setState({newSystemName: e.target.value})}}
+                            className="admin-input-element" type="text" 
+                            placeholder="eg. Computer Department 2020" value={this.state.newSystemName} />
+                    </div>
+                    <div className="input-warning">Invalid system name</div>
+                </div>
+
+                <div className="admin-input-component">
+                    <div className="admin-input-label">System Description</div>
+                    <div className="admin-input-field-box-description">
+                        <input 
+                            onChange={(e)=>{this.setState({newSystemDescription: e.target.value})}}
+                            className="admin-input-element-description" type="text" 
+                            placeholder="optional" value={this.state.newSystemDescription} />
+                    </div>
+                    <div className="input-warning">only 500 characters.</div>
+                </div>
+
+                <div className="admin-input-component mt-10">
+                    <div
+                        onClick={()=>{this.submitEditProject()}} 
+                        className="admin-input-submit-button">
+                        Submit
+                    </div>
+                </div>
+        </>;
+    }
+
+    createNewSystem = () => {
+        return(
+            <>
+                <div className="system-search-title mt-10">Add New System</div>
+
+                <div className="admin-input-component">
+                    <div className="admin-input-label">System Name</div>
+                    <div className="admin-input-field-box">
+                        <input 
+                            onChange={(e)=>{this.setState({newSystemName: e.target.value})}}
+                            className="admin-input-element" type="text" 
+                            placeholder="eg. Computer Department 2020" value={this.state.newSystemName} />
+                    </div>
+                    <div className="input-warning">Invalid system name</div>
+                </div>
+
+                <div className="admin-input-component">
+                    <div className="admin-input-label">System Description</div>
+                    <div className="admin-input-field-box-description">
+                        <input 
+                            onChange={(e)=>{this.setState({newSystemDescription: e.target.value})}}
+                            className="admin-input-element-description" type="text" 
+                            placeholder="optional" value={this.state.newSystemDescription} />
+                    </div>
+                    <div className="input-warning">only 500 characters.</div>
+                </div>
+
+                <div className="admin-input-component mt-10">
+                    <div
+                        onClick={()=>{this.submitNewReport()}} 
+                        className="admin-input-submit-button">
+                        Submit
+                    </div>
+                </div>
+
             </>
         );
     }
 
+    submitNewReport = () => {
+        if(!this.state.newSystemName){
+            alert('System name cannot be empty!');
+        }
+
+        var networkHelper = new NetworkHelper();
+        networkHelper.setData('Authorization', sessionStorage.getItem('token'));
+        networkHelper.setData('system_name', this.state.newSystemName);
+        networkHelper.setData('system_description', this.state.newSystemDescription);
+        networkHelper.setApiPath('adminCreateNewSystem', this.state.newSystemDescription);
+        
+        networkHelper.execute((response) => {
+            if (response.status === 200){
+                this.searchSystemListBySearchInput();
+            }
+        }, (errorMsg, StatusCode) => {
+            this.setState({showLoading:false, activeSystemProjects: ''});
+            if(StatusCode === 401){
+                alert(errorMsg);
+            } else {
+                alert(errorMsg);
+            }
+        }, () => {
+            alert("SERVER ERROR OCCURED");
+        });
+    }
+
+
+
     rendersysList = (fetchedSystemList = []) => {
         let render = fetchedSystemList.map((element, key)=>{
             return <>
-                <div className="table-data-row" onClick={()=>{
-                    if(this.state.activeSystem === element){
-                        this.setState({activeSystem: '', activeSystemProjects:''});
-                    } else {
-                        this.setState({activeSystem: element, activeSystemProjects:''});
-                        setTimeout(()=>{
-                            this.getProjectListBySystemId(element.system_id);
-                        },100);
-                    }
-                    }}>
+                <div className="table-data-row">
                     <div className="table-data-index">
                         {element.system_id}
                     </div>
-                    <div className="table-data-main-title">
+                    <div 
+                        onClick={() => {
+                            if(this.state.activeSystem === element){
+                                this.setState({activeSystem: '', activeSystemProjects:'', toggleToAction:''});
+                            } else {
+                                this.setState({activeSystem: element, activeSystemProjects:''});
+                                setTimeout(()=>{
+                                    this.getProjectListBySystemId(element.system_id);
+                                },100);
+                            }
+                        }}
+                        className="table-data-main-title">
                         {element.system_name}
                     </div>
                     <div className="table-data-storage">
                         --GB
                     </div>
                     <div className="table-data-action">
-                        Edit | Delete
+                        <span onClick={()=>{ 
+                            this.setState({activeSystem:element});
+                            setTimeout(()=>{
+                                this.getProjectListBySystemId(element.system_id);
+                                this.toggleExpandingBox('editSystem');
+                            },100)}}>Edit</span> |
+                        <span onClick={()=>{ alert('are you sure you want to delete!')}}>Delete</span> 
                     </div>
                 </div>
             </>;
@@ -186,7 +461,9 @@ class AdminSystem extends Component {
                 </div>
                 
                 <div className="system-search-input">
-                    <img src={SearchIcon} height={15} alt="img"/>
+                    <img
+                        onClick={()=>{this.searchSystemListBySearchInput()}}
+                        src={SearchIcon} height={15} alt="img"/>
                     <input 
                         onKeyDown = {(event)=>{if(event.key === 'Enter'){this.searchSystemListBySearchInput()}}}
                         onChange={(e)=>{this.setState({systemSearchInput:e.target.value})}}
@@ -237,7 +514,9 @@ class AdminSystem extends Component {
                     --GB
                 </div>
                 <div className="table-data-action">
-                    Edit | Delete
+                    <span onClick={()=>{ this.toggleExpandingBox('editProject')}}>Edit</span> 
+                        | 
+                    <span onClick={()=>{ alert('are your srure you want to delte') }}>Delete</span> 
                 </div>
             </div>
         </>;
@@ -256,6 +535,7 @@ class AdminSystem extends Component {
                         <div 
                             onClick={()=>{ this.toggleExpandingBox('addNewProject')}}
                             className="add-new-button"> + Add new Project</div>
+                            <span onClick={()=>{this.setState({activeSystemProjectsL:'', activeSystem: '',toggleToAction:''})}}>&nbsp; X &nbsp;</span>
                     </div>
                 </div>
 
@@ -264,7 +544,7 @@ class AdminSystem extends Component {
                         #
                     </div>
                     <div className="table-main-title">
-                        System Name
+                        Project Name
                     </div>
                     <div className="table-storage">
                         Storage

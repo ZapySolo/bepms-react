@@ -11,8 +11,7 @@ import NetworkHelper from '../Helpers/NetworkHelper';
 
 import {withRouter} from 'react-router';
 
-const baseUrl = process.env.PUBLIC_URL;
-
+const baseUrl = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? '': '/bepms';
 
 //<img src={require('../../assets/bepms-loading.gif')} alt="loading..." />
 class Login extends Component {
@@ -58,7 +57,6 @@ class Login extends Component {
                     console.log(response.data.data.access_token);
                     sessionStorage.setItem('token', response.data.data.access_token);
                     this.setState({showLoading:false,userEmail:'',userPassword:''});
-                    console.log('redirecting to ...'+baseUrl+'/'+this.state.loginType)
                     try{
                         this.props.history.push(baseUrl+'/'+this.state.loginType);
                     } catch {
@@ -67,7 +65,6 @@ class Login extends Component {
                             window.location.href = (baseUrl+'/'+this.state.loginType);
                         }
                     }
-                    
                 }
             }, (errorMsg,StatusCode) => {
                 //if status code is 401 then credentials are wrong

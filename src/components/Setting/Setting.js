@@ -241,12 +241,13 @@ class Setting extends Component {
 
                         </div>
                         <div className="input-field input-field-submit" style={{margin:'auto'}}>
-                                <div className="setting-submit">
-                                    <input
-                                        onClick={()=>{this.submitForm()}}
-                                        className="submit-button" type="submit" name="Submit" />
-                                </div>
+                            <div className="setting-submit">
+                                <input
+                                    onClick={()=>{this.submitForm()}}
+                                    className="submit-button" type="submit" name="Submit" />
                             </div>
+                        </div>
+                        
                     </div>
                 </div>
             </>

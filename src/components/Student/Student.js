@@ -26,7 +26,9 @@ class Student extends Component {
             fetchedProjectDetails:{},
             projectTab:'details', //details, attachments, todo
             currentProjectID:'',
-            currentProjectPosition:''
+            currentProjectPosition:'',
+            editProjectTitle:'',
+            editProjectDescription:'',
         };
         this.handleOpenModal = this.handleOpenModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -144,8 +146,9 @@ class Student extends Component {
         });
         if(flag){
             this.getProjectDetailsByProjectId(project_id);
-            this.setState({sideBarToggle:false});
-            this.setState({currentProjectID:project_id, currentProjectPosition:positionName});
+            setTimeout(()=>{
+                this.setState({sideBarToggle:false, currentProjectID:project_id, currentProjectPosition:positionName});
+            },100);
         }
     }
 
@@ -228,8 +231,43 @@ class Student extends Component {
         networkHelper.execute((response) => {
             if (response.status === 200){
                 let data = response.data.data;
-                this.setState({showLoading:false, fetchedProjectDetails: data[0]});
-                console.log(this.state.fetchedProjectDetails);
+                data = data[0];
+                this.setState({showLoading:false, fetchedProjectDetails: data});
+                this.setState({editProjectDescription:data.project_description, editProjectTitle:data.project_name})
+            }
+        }, (errorMsg, StatusCode) => {
+            if(StatusCode === 401){
+                alert(errorMsg);
+            } else {
+                alert(errorMsg);
+            }
+        }, () => {
+            alert("SERVER ERROR OCCURED");
+        });
+    }
+
+    submitEditProjectDetails = () => {
+        let activeProject = this.state.activeProject;
+
+        var networkHelper = new NetworkHelper();
+        networkHelper.setData('Authorization', sessionStorage.getItem('token'));
+        networkHelper.setData('project_id', activeProject.project_id);
+        if(activeProject.project_name === this.state.editProjectTitle && activeProject.project_description === this.state.editProjectDescription){
+            alert('tried submitting unchanges values');
+            return ;
+        }
+        if(activeProject.project_name !== this.state.editProjectTitle){
+            networkHelper.setData('project_name', this.state.editProjectTitle);
+        }
+        if(activeProject.project_description !== this.state.editProjectDescription){
+            networkHelper.setData('project_description', this.state.editProjectDescription);
+        }
+        networkHelper.setApiPath('leaderEditProjectDetails');
+
+        networkHelper.execute((response) => {
+            if (response.status === 200){
+                this.getProjectDetailsByProjectId(activeProject.project_id);
+                this.getProjectList();
             }
         }, (errorMsg, StatusCode) => {
             if(StatusCode === 401){
@@ -319,7 +357,48 @@ class Student extends Component {
         </>);
 
         let edit = (<>
-            Edit your project here
+            <div>
+                <div className="input-field" style={{width:'100%'}}>
+                    <div className="input-field-lable">
+                        <span className="input-field-lable-text" >Project Title</span>
+                    </div>
+                    <div className="field-input">
+                        <input 
+                            onChange={(e)=>{this.setState({editProjectTitle :e.target.value})}}
+                            className="field-input-element" type="text" 
+                            value={this.state.editProjectTitle} 
+                            style={{color:'#CBCBCB'}}/>
+                    </div>
+                    <div className="field-error">
+                        <span className="error-message-text">title cannot be empty</span>
+                    </div>
+                </div>
+
+                <div className="input-field" style={{width:'100%'}}>
+                    <div className="input-field-lable">
+                        <span className="input-field-lable-text" >Project Description</span>
+                    </div>
+                    <div className="field-input">
+                        <input 
+                            onChange={(e)=>{this.setState({editProjectDescription :e.target.value})}}
+                            className="field-input-element" type="text" 
+                            value={this.state.editProjectDescription} 
+                            style={{color:'#CBCBCB'}}/>
+                    </div>
+                    <div className="field-error">
+                        <span className="error-message-text">description must be more than 200 characters</span>
+                    </div>
+                </div>
+
+                <div className="input-field input-field-submit" style={{margin:'auto'}}>
+                    <div className="setting-submit">
+                        <input
+                            onClick={()=>{this.submitEditProjectDetails()}}
+                            className="submit-button" type="submit" name="Submit" />
+                    </div>
+                </div>
+                
+            </div>
         </>);
 
         let xxx = (<></>);
@@ -356,11 +435,14 @@ class Student extends Component {
                             className="project-action">
                             <span className="project-action-text">To-Do</span>
                         </div>
-                        <div
-                            onClick={()=>this.setState({projectTab:'edit'})}
-                            className="project-action">
-                            <span className="project-action-text">Edit</span>
-                        </div>
+                        {(this.state.currentProjectPosition === 'leader') 
+                            ? <div
+                                onClick={()=>this.setState({projectTab:'edit'})}
+                                className="project-action">
+                                <span className="project-action-text">Edit</span>
+                            </div> 
+                            : <></>}
+                        
                     </div>
                 </div>
                 
