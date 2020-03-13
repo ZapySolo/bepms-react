@@ -8,7 +8,7 @@ class Setting extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            
+            editProfileImg:''
         };
     }
 
@@ -21,36 +21,36 @@ class Setting extends Component {
 
         var networkHelper = new NetworkHelper();
 
-        networkHelper.setData('Authorization', sessionStorage.getItem('token'));
+        networkHelper.setFormData('Authorization', sessionStorage.getItem('token'));
 
         if(this.state.user_first_name !== this.state.edit_user_first_name)
-            networkHelper.setData('user_first_name', this.state.edit_user_first_name);
+            networkHelper.setFormData('user_first_name', this.state.edit_user_first_name);
 
         if(this.state.user_last_name !== this.state.edit_user_last_name)
-            networkHelper.setData('user_last_name', this.state.edit_user_last_name);
+            networkHelper.setFormData('user_last_name', this.state.edit_user_last_name);
 
         if(this.state.user_display_name !== this.state.edit_user_display_name)
-            networkHelper.setData('user_display_name', this.state.edit_user_display_name);
+            networkHelper.setFormData('user_display_name', this.state.edit_user_display_name);
 
         if(this.state.user_email !== this.state.edit_user_email){
-            networkHelper.setData('user_email', this.state.edit_user_email);
-            networkHelper.setData('user_confirm_email', this.state.edit_re_user_email);
+            networkHelper.setFormData('user_email', this.state.edit_user_email);
+            networkHelper.setFormData('user_confirm_email', this.state.edit_re_user_email);
         }
-
         if(this.state.user_mobile !== this.state.edit_user_mobile)
-            networkHelper.setData('user_mobile', this.state.edit_user_mobile);
+            networkHelper.setFormData('user_mobile', this.state.edit_user_mobile);
 
         if(this.state.edit_user_password && (this.state.edit_user_password === this.state.edit_re_user_password)){
-            networkHelper.setData('user_password', this.state.edit_user_password);
-            networkHelper.setData('user_confirm_password', this.state.edit_re_user_password);
+            networkHelper.setFormData('user_password', this.state.edit_user_password);
+            networkHelper.setFormData('user_confirm_password', this.state.edit_re_user_password);
         }
+        networkHelper.setFormData('user_profile_image', this.state.editProfileImg);
         
         networkHelper.setApiPath('updateUserProfile');
 
-        networkHelper.execute((response) => {
+        networkHelper.executeFilePost((response) => {
             if (response.status === 200){
-                console.log(response);
                 alert(response.data.message);
+                this.setDefaultProfileValues();
             }
         }, (errorMsg, StatusCode) => {
             if(StatusCode === 401){
@@ -64,6 +64,10 @@ class Setting extends Component {
     }
 
     componentDidMount(){
+        this.setDefaultProfileValues();
+    }
+
+    setDefaultProfileValues = () => {
         var networkHelper = new NetworkHelper();
 
         networkHelper.setData('Authorization', sessionStorage.getItem('token'));
@@ -117,9 +121,15 @@ class Setting extends Component {
 
                         <div className="profile-image-setting">
                             <div style={{height:100, width:100, position:'relative', marginBottom: 25, marginTop:20, textAlign:'center', borderRadius:50}}>
-                                <img onClick={this.handleFileSelect} src="https://source.unsplash.com/random/100x100" alt="profile_img" style={{height:100, width:100 ,borderRadius:50}} />
+                                <img onClick={this.handleFileSelect} src={"http://zapy.tech/projects/bepms-ci/uploads/profiles/"+this.state.edit_user_profile_image} alt="profile_img" style={{height:100, width:100 ,borderRadius:50}} />
+                                <input 
+                                    id="profile_img"
+                                    className="field-input-element" type="file"
+                                    style={{color:'#CBCBCB', height:18, border:0, display:'none'}}
+                                    onChange={(e)=>{this.setState({editProfileImg: e.target.files[0]})}}
+                                />
                                 <div className="profile-edit">
-                                    <span className="profile-edit-text">Edit</span>
+                                    <label for="profile_img">Edit</label>
                                 </div>
                             </div>
                         </div>
@@ -141,7 +151,7 @@ class Setting extends Component {
                                 </div>
                             </div>
 
-                            <div className="input-field">
+                            <div className="input-field if2">
                                 <div className="input-field-lable">
                                     <span className="input-field-lable-text" >Last Name</span>
                                 </div>
@@ -191,7 +201,7 @@ class Setting extends Component {
                                 </div>
                             </div>
 
-                            <div className="input-field">
+                            <div className="input-field if2">
                                 <div className="input-field-lable">
                                     <span className="input-field-lable-text" >Re-Enter Email</span>
                                 </div>
@@ -207,7 +217,7 @@ class Setting extends Component {
                                 </div>
                             </div>
 
-                            <div className="input-field">
+                            <div className="input-field ">
                                 <div className="input-field-lable">
                                     <span className="input-field-lable-text" >Password</span>
                                 </div>
@@ -222,7 +232,7 @@ class Setting extends Component {
                                 </div>
                             </div>
 
-                            <div className="input-field">
+                            <div className="input-field if2">
                                 <div className="input-field-lable">
                                     <span className="input-field-lable-text" >Re-Enter Password</span>
                                 </div>

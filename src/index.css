@@ -32,3 +32,11 @@ code {
   font-family: 'Sailec-Thin';
   src: local('Sailec-Thin'), url('./fonts/Sailec Thin.ttf') format('truetype');
 }
+
+
+.input-warning{
+  display: none !important;
+}
+.field-error{
+  display: none !important;
+}

@@ -53,9 +53,11 @@ class Student extends Component {
                 } else {
                     try{
                         this.setState({showLoading:false, fetchedProjectList: data, activeProject: data[0]});
-                        data = data[0];
-                        this.getProjectDetailsByProjectId(data.project_id);
-                        this.setState({currentProjectID:data.project_id, currentProjectPosition:data.project_position_name});
+                        if(!this.state.currentProjectID){
+                            data = data[0];
+                            this.getProjectDetailsByProjectId(data.project_id);
+                            this.setState({currentProjectID:data.project_id, currentProjectPosition:data.project_position_name});
+                        }
                     } catch {
 
                     }
@@ -298,7 +300,7 @@ class Student extends Component {
             return <>
                 <div key={'mp'+key} className="member-profie mb10">
                     <div key={'md'+key} className="member-detail">
-                        <img key={'mpimg'+key} src={member_profile_img} alt="profile" className="member-profile-img" />
+                        <img key={'mpimg'+key} src={"http://zapy.tech/projects/bepms-ci/uploads/profiles/"+member_profile_img} alt="profile" className="member-profile-img" />
                         <span key={'sml'+key} style={{marginLeft:10}} >{member_name}</span>
                     </div>
                     <div key={'mp_X'+key} className="member-position">

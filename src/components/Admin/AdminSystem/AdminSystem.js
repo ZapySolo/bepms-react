@@ -56,6 +56,28 @@ class AdminSystem extends Component {
         });
     }
 
+    adminDeleteProject = (project_id) => {
+        let activeSystem = this.state.activeSystem;
+        var networkHelper = new NetworkHelper();
+        networkHelper.setData('Authorization', sessionStorage.getItem('token'));
+        networkHelper.setData('project_id', project_id);
+        networkHelper.setApiPath('adminDeleteProject');
+        networkHelper.execute((response) => {
+            if (response.status === 200){
+                this.getProjectListBySystemId(activeSystem.system_id);
+                alert(response.data.message);
+            }
+        }, (errorMsg, StatusCode) => {
+            if(StatusCode === 401){
+                alert(errorMsg);
+            } else {
+                alert(errorMsg);
+            }
+        }, () => {
+            alert("SERVER ERROR OCCURED");
+        });
+    }
+
     getProjectListBySystemId = (system_id) => {
         console.log('setting projects of system_id ', system_id);
         var networkHelper = new NetworkHelper();
@@ -118,7 +140,7 @@ class AdminSystem extends Component {
                             this.setState({newSystemName: x})
                         }}
                         className="admin-input-element" type="text" 
-                        placeholder={"eg. member"+(key+1)+'@gmail.com'} value={element} />
+                        placeholder={"eg. member@gmail.com"+(key+1)+'@gmail.com'} value={element} />
                 </div>
                 <div className="input-warning">Invalid email</div>
             </div>
@@ -140,7 +162,7 @@ class AdminSystem extends Component {
                         <input 
                             onChange={(e)=>{this.setState({newProjectHODEmail: e.target.value})}}
                             className="admin-input-element" type="text" 
-                            placeholder="eg. Computer Department 2020" value={this.state.newProjectHODEmail} />
+                            placeholder="eg. hod@gmail.com" value={this.state.newProjectHODEmail} />
                     </div>
                     <div className="input-warning">Invalid email</div>
                 </div>
@@ -151,7 +173,7 @@ class AdminSystem extends Component {
                         <input 
                             onChange={(e)=>{this.setState({newProjectPCEmail: e.target.value})}}
                             className="admin-input-element" type="text" 
-                            placeholder="eg. Computer Department 2020" value={this.state.newProjectPCEmail} />
+                            placeholder="eg. pc@gmail.com" value={this.state.newProjectPCEmail} />
                     </div>
                     <div className="input-warning">Invalid email</div>
                 </div>
@@ -162,7 +184,7 @@ class AdminSystem extends Component {
                         <input 
                             onChange={(e)=>{this.setState({newProjectGuideEmail: e.target.value})}}
                             className="admin-input-element" type="text" 
-                            placeholder="eg. Computer Department 2020" value={this.state.newProjectGuideEmail} />
+                            placeholder="eg. guide@gmail.com" value={this.state.newProjectGuideEmail} />
                     </div>
                     <div className="input-warning">Invalid email</div>
                 </div>
@@ -173,7 +195,7 @@ class AdminSystem extends Component {
                         <input 
                             onChange={(e)=>{this.setState({newProjectLeaderEmail: e.target.value})}}
                             className="admin-input-element" type="text" 
-                            placeholder="eg. Computer Department 2020" value={this.state.newProjectLeaderEmail} />
+                            placeholder="eg. leader@gmail.com" value={this.state.newProjectLeaderEmail} />
                     </div>
                     <div className="input-warning">Invalid email</div>
                 </div>
@@ -212,7 +234,7 @@ class AdminSystem extends Component {
                         <input 
                             onChange={(e)=>{this.setState({newProjectHODEmail: e.target.value})}}
                             className="admin-input-element" type="text" 
-                            placeholder="eg. Computer Department 2020" value={this.state.newProjectHODEmail} />
+                            placeholder="eg. hod@gmail.com" value={this.state.newProjectHODEmail} />
                     </div>
                     <div className="input-warning">Invalid email</div>
                 </div>
@@ -223,7 +245,7 @@ class AdminSystem extends Component {
                         <input 
                             onChange={(e)=>{this.setState({newProjectPCEmail: e.target.value})}}
                             className="admin-input-element" type="text" 
-                            placeholder="eg. Computer Department 2020" value={this.state.newProjectPCEmail} />
+                            placeholder="eg. pc@gmail.com" value={this.state.newProjectPCEmail} />
                     </div>
                     <div className="input-warning">Invalid email</div>
                 </div>
@@ -234,7 +256,7 @@ class AdminSystem extends Component {
                         <input 
                             onChange={(e)=>{this.setState({newProjectGuideEmail: e.target.value})}}
                             className="admin-input-element" type="text" 
-                            placeholder="eg. Computer Department 2020" value={this.state.newProjectGuideEmail} />
+                            placeholder="eg. guide@gmail.com" value={this.state.newProjectGuideEmail} />
                     </div>
                     <div className="input-warning">Invalid email</div>
                 </div>
@@ -245,7 +267,7 @@ class AdminSystem extends Component {
                         <input 
                             onChange={(e)=>{this.setState({newProjectLeaderEmail: e.target.value})}}
                             className="admin-input-element" type="text" 
-                            placeholder="eg. Computer Department 2020" value={this.state.newProjectLeaderEmail} />
+                            placeholder="eg. leader@gmail.com" value={this.state.newProjectLeaderEmail} />
                     </div>
                     <div className="input-warning">Invalid email</div>
                 </div>
@@ -255,7 +277,7 @@ class AdminSystem extends Component {
                 <div
                     onClick={()=>{
                         let membersEmail = this.state.newProjectMemberEmail;
-                        membersEmail.push('member@domain.com');
+                        membersEmail.push('');
                         this.setState({projectMemberEmailInput: membersEmail});
                     }}
                     className="admin-input-component" style={{textAlign:'center'}}>
@@ -264,7 +286,7 @@ class AdminSystem extends Component {
 
                 <div className="admin-input-component mt-10">
                     <div
-                        onClick={()=>{this.submitNewProject()}}
+                        onClick={()=>{this.submitEditProject()}}
                         className="admin-input-submit-button">
                         Submit
                     </div>
@@ -274,9 +296,41 @@ class AdminSystem extends Component {
 
     submitNewProject = () => {
         let activeSystem = this.state.activeSystem;
-        console.log('adding new project to system_id => '+activeSystem.system_id+'\n');
-        console.log('HOD => '+this.state.newProjectHODEmail+'\nPC => '+this.state.newProjectPCEmail+'\n Guide => '+this.state.newProjectGuideEmail);
-        console.log('Leader => '+this.state.newProjectLeaderEmail+'\nmember => '+this.state.newProjectMemberEmail);
+
+        var networkHelper = new NetworkHelper();
+        networkHelper.setData('Authorization', sessionStorage.getItem('token'));
+        networkHelper.setData('hod_email', activeSystem.system_id);
+        if(this.state.newProjectHODEmail){
+            networkHelper.setData('hod_email', this.state.newProjectHODEmail);
+        }
+        if(this.state.newProjectPCEmail){
+            networkHelper.setData('pc_email', this.state.newProjectPCEmail);
+        }
+        if(this.state.newProjectGuideEmail){
+            networkHelper.setData('guide_email', this.state.newProjectGuideEmail);
+        }
+        if(this.state.newProjectLeaderEmail){
+            networkHelper.setData('leader_email', this.state.newProjectLeaderEmail);
+        }
+        if(this.state.newProjectMemberEmail){
+            networkHelper.setData('member_email', this.state.newProjectMemberEmail);
+        }
+        networkHelper.setApiPath('adminAddProjectToSystem');
+        
+        networkHelper.execute((response) => {
+            if (response.status === 200){
+                this.getProjectListBySystemId(activeSystem.system_id);
+                this.setState({toggleToAction:''});
+            }
+        }, (errorMsg, StatusCode) => {
+            if(StatusCode === 401){
+                alert(errorMsg);
+            } else {
+                alert(errorMsg);
+            }
+        }, () => {
+            alert("SERVER ERROR OCCURED");
+        });
     }
 
     expandBoxComponent = () => {
@@ -434,13 +488,37 @@ class AdminSystem extends Component {
                                 this.getProjectListBySystemId(element.system_id);
                                 this.toggleExpandingBox('editSystem');
                             },100)}}>Edit</span> |
-                        <span onClick={()=>{ alert('are you sure you want to delete!')}}>Delete</span> 
+                        <span onClick={()=>{ 
+                            if (window.confirm('Are you sure you wish to delete this system?\nyou\'ll lose all the projects and corresponding reports!'))
+                                this.adminDeleteSystem(element.system_id);
+                        }}>Delete</span> 
                     </div>
                 </div>
             </>;
         });
 
         return render;
+    }
+
+    adminDeleteSystem = (system_id) => {
+        var networkHelper = new NetworkHelper();
+        networkHelper.setData('Authorization', sessionStorage.getItem('token'));
+        networkHelper.setData('system_id', system_id);
+        networkHelper.setApiPath('adminDeleteSystem');
+        networkHelper.execute((response) => {
+            if (response.status === 200){
+                this.searchSystemListBySearchInput();
+                alert(response.data.message);
+            }
+        }, (errorMsg, StatusCode) => {
+            if(StatusCode === 401){
+                alert(errorMsg);
+            } else {
+                alert(errorMsg);
+            }
+        }, () => {
+            alert("SERVER ERROR OCCURED");
+        });
     }
 
     renderSystemList = () => {
@@ -516,7 +594,10 @@ class AdminSystem extends Component {
                 <div className="table-data-action">
                     <span onClick={()=>{ this.toggleExpandingBox('editProject')}}>Edit</span> 
                         | 
-                    <span onClick={()=>{ alert('are your srure you want to delte') }}>Delete</span> 
+                    <span onClick={()=>{
+                        if (window.confirm('Are you sure you wish to delete this\nthis will also delete the corresponding reports and attachments'))
+                            this.adminDeleteProject(element.project_id);
+                        }}>Delete</span>
                 </div>
             </div>
         </>;
@@ -535,7 +616,7 @@ class AdminSystem extends Component {
                         <div 
                             onClick={()=>{ this.toggleExpandingBox('addNewProject')}}
                             className="add-new-button"> + Add new Project</div>
-                            <span onClick={()=>{this.setState({activeSystemProjectsL:'', activeSystem: '',toggleToAction:''})}}>&nbsp; X &nbsp;</span>
+                            <span onClick={()=>{this.setState({activeSystemProjectsL:'', activeSystem: '',toggleToAction:''})}}>&nbsp; &times; &nbsp;</span>
                     </div>
                 </div>
 

@@ -20,8 +20,8 @@ class Login extends Component {
         this.state = {
             isFlipped: false,
             loginType:'student',//student, faculty
-            loginPage:'admin',//system, admin
-            userEmail: '21nikhilpatil1998@gmail.com',
+            loginPage:'system',//system, admin
+            userEmail: 'leader@gmail.com',
             reEnterEmail:'',
             userPassword: '000',
             loginError:false
