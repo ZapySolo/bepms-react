@@ -86,7 +86,7 @@ class Notification extends Component {
                                     <div className="notification-date">{value.notification_creation_date}</div>
                                 </div>
                                 <div className="notification-2">
-                                    <span className="notification-action" onClick={this.userDeleteNotification(value.notification_id)}>Remove</span>
+                                    <span className="notification-action" onClick={()=>{this.userDeleteNotification(value.notification_id)}}>Remove</span>
                                 </div>
                             </div>
                         </div>

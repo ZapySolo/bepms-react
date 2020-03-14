@@ -680,3 +680,19 @@ class AdminSystem extends Component {
 
 //make this component available to the app
 export default AdminSystem;
+
+function customTimeString(time){
+    time = time/ 1000;
+    if(time < 600){
+        return 'now';
+    } else if (time < 3600){
+        return Math.floor(time / 60)+' min ago'; //sec to min
+    } else if (time < 86400){
+        return Math.floor(time / 3600)+' hour ago'; //sec to hour
+    } else if (time < 1036800){
+        return Math.floor(time / 86400)+' days ago'; //sec to day
+    } else {
+        let x = new Date (time * 1000);
+        return x.getDate() + '/' + (x.getMonth()+1) + '/' + x.getFullYear();
+    }
+}

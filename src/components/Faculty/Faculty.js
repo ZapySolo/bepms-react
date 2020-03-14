@@ -12,6 +12,8 @@ import FacultyNotification from '../Notification/Notification';
 
 import NetworkHelper from '../Helpers/NetworkHelper';
 
+const baseUrl = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? '': '';
+
 class Faculty extends Component {
     constructor(props) {
         super(props);
@@ -224,7 +226,7 @@ class Faculty extends Component {
 
         if(this.state.submitSearchFlag){
             return <div style={{marginTop:20, display:'flex'}}>
-                    <img src={require('../../assets/bepms-loading.gif')} alt="loading projects..." width={35} height={35} />
+                    <img src={require('../../assets/bepms-loading.gif')} alt="loading projects..." width={35} height={35}  />
                 </div>;
         }
 
@@ -237,7 +239,7 @@ class Faculty extends Component {
             return <>
                 <div className="project card_rank">
                     <div>
-                        <img src="https://source.unsplash.com/random/150*100"  alt="project_img" style={{borderRadius:5}} height='100' width='150' />
+                        <img src={"http://zapy.tech/projects/bepms-ci/uploads/projects/cover/"+element.project_cover_img}  alt="project_img" style={{borderRadius:5, objectFit:'cover'}} height='100' width='150' />
                     </div>
                     <div className="project-title-text-f">{element.project_name}</div>
                     <div className="project-leader-text-f">{element.leader_display_name}</div>
@@ -260,8 +262,7 @@ class Faculty extends Component {
             return <div style={{color:'grey', fontSize:'11px'}}>
                 No Reports To Display
             </div>;
-        }
-        console.log(searchResultReport);
+        } 
 
         let pendingDiv;
         let render = searchResultReport.map((element, key)=>{
@@ -270,11 +271,10 @@ class Faculty extends Component {
                 <div className="report_x card_rank">
                     <div className="report-wrapper-xzx">
                         <div className="report-project-img">
-                            <img alt="project_img" src="https://source.unsplashh.com/random/40x40" height="40" width="40" style={{borderRadius:20}} />
+                            <img alt="project_img" src={"http://zapy.tech/projects/bepms-ci/uploads/projects/profile/"+element.project_profile_img} height="35" width="35" style={{borderRadius:20, margin:'5px 0px 5px 5px'}} />
                         </div>
-
                         <div className="report-description">
-                            <span className="report-project-name-text-f">{element.project_name}<span className="report-project-name-text-f-date"> • {element.report_creation_date}</span></span>
+                            <span className="report-project-name-text-f">{element.project_name}<span className="report-project-name-text-f-date"> • {customTimeString(element.report_creation_date)}</span></span>
                             <span className="report-leader-name-text-f">{element.leader_display_name}</span>
                             <span className="report-description-text-f">{element.report_description}</span>
                         </div>
@@ -360,6 +360,7 @@ class Faculty extends Component {
                         <div className="navigation_button" onClick={()=>{this.setState({activeTab: 'setting'})}}>Setting</div>
                         <div className="navigation_button" onClick={()=>{this.setState({activeTab: 'notification'})}}>Notif</div>
                     </div>
+                    
                 </div>
                 <div className="content">
                     {this.renderComponent()}
@@ -368,28 +369,39 @@ class Faculty extends Component {
 
             <div className="main-tablet">
                 <div className="left-navigator">
-                        <div className="logo-box" >
-                            <div style={{height:'111px' , width:'111px', display:'flex', justifyContent:'center', alignItems:'center'}}><img src={logo} height="30" alt="bepms"/></div>
+                    <div className="logo-box" >
+                        <div style={{height:'111px' , width:'111px', display:'flex', justifyContent:'center', alignItems:'center'}}><img src={logo} height="30" alt="bepms"/></div>
+                    </div>
+                    <div className="left-navigation-options">
+                        <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'home'})}}>
+                            <img src={HomepageIcon} alt="Home" />
+                            <span className="navigation_title"  >Homepage</span>
                         </div>
-                        <div className="left-navigation-options">
-                            <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'home'})}}>
-                                <img src={HomepageIcon} alt="Home" />
-                                <span className="navigation_title"  >Homepage</span>
-                            </div>
-                            <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'report'})}}>
-                                <img  src={HomepageIcon} alt="Home" />
-                                <span className="navigation_title" >Reports</span>
-                            </div>
-                            <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'setting'})}}>
-                                <img  src={HomepageIcon} alt="Home" />
-                                <span className="navigation_title" >Setting</span>
-                            </div>
-                            <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'notification'})}}>
-                                <img  src={HomepageIcon} alt="home" />
-                                <span className="navigation_title" >Notifications</span>
-                            </div>
+                        <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'report'})}}>
+                            <img  src={HomepageIcon} alt="Home" />
+                            <span className="navigation_title" >Reports</span>
+                        </div>
+                        <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'setting'})}}>
+                            <img  src={HomepageIcon} alt="Home" />
+                            <span className="navigation_title" >Setting</span>
+                        </div>
+                        <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'notification'})}}>
+                            <img  src={HomepageIcon} alt="home" />
+                            <span className="navigation_title" >Notifications</span>
                         </div>
                     </div>
+                </div>
+                <div className="logout-system"
+                    onClick={()=>{
+                        if (window.confirm('Are you sure to logout?')){
+                            sessionStorage.removeItem('token');
+                            if(typeof window !== 'undefined'){
+                                window.location.href = (baseUrl+'/');
+                            } else {
+                                alert('we are having trouble loggin you out')
+                            }
+                        }
+                    }}> Logout </div>
                 <div className="right-main">
                     <div className="tablet-banner">
                 
@@ -403,6 +415,24 @@ class Faculty extends Component {
             </div>
         </>
         );
+    }
+}
+
+function customTimeString(time_in_string){
+    let timestampNow = Date.now();
+    let time = Date.parse(time_in_string); //in sec
+    time = (timestampNow - time)/1000;
+    if(time < 600){
+        return 'now';
+    } else if (time < 3600){
+        return Math.floor(time / 60)+' min ago'; //sec to min
+    } else if (time < 86400){
+        return Math.floor(time / 3600)+' hour ago'; //sec to hour
+    } else if (time < 1036800){
+        return Math.floor(time / 86400)+' days ago'; //sec to day
+    } else {
+        let x = new Date (time * 1000);
+        return x.getDate() + '/' + (x.getMonth()+1) + '/' + x.getFullYear();
     }
 }
 

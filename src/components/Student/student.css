@@ -513,8 +513,19 @@ border: 1px solid #E9EFF4;
     margin-bottom: 10px;
 }
 
+.logout-system{
+    position:absolute;
+    bottom:20px;
+    text-align:center;
+    display: none;
+}
+
 @media (min-width: 768px) {
     /** Tablets and above */
+    .logout-system{
+        width: 111px;
+        display: block;
+    }
     .main-mobile{
         display: none;
     }
@@ -615,6 +626,9 @@ border: 1px solid #E9EFF4;
     }
     .left-navigator{
         width:246px;
+    }
+    .logout-system{
+        width:216px;
     }
 }
 

@@ -13,6 +13,8 @@ import 'react-circular-progressbar/dist/styles.css';
 
 import NetworkHelper from '../Helpers/NetworkHelper';
 
+const baseUrl = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? '': '';
+
 class Student extends Component {
     constructor(props) {
         super(props);
@@ -435,13 +437,13 @@ class Student extends Component {
         return (<>
                 <div className="project-image">
                     <div className="cover-image-padd" style={{height:'170px', width:'100%'}}>
-                        <img src="https://source.unsplash.com/random/400x200" style={{objectFit:"cover"}} height="170px" width="100%" alt="profile" />
+                        <img src={"http://zapy.tech/projects/bepms-ci/uploads/projects/cover/"+fetchedProjectDetails.project_cover_img} style={{objectFit:"cover"}} height="170px" width="100%" alt="profile" />
                     </div>
                 </div>
                 <div className="project-options">
                     <div>
                         <div className="project-profile-img">
-                            <img className="project-profile-img-element" src="https://source.unsplash.com/random/100x100" alt="profile" />
+                            <img className="project-profile-img-element" src={"http://zapy.tech/projects/bepms-ci/uploads/projects/profile/"+fetchedProjectDetails.project_profile_img} alt="profile" />
                         </div>
                     </div>
                     <div className="card_rank project-options-elements">
@@ -514,6 +516,7 @@ class Student extends Component {
                         <div className="navigation_button" onClick={()=>{this.setState({activeTab: 'setting'})}}>Setting</div>
                         <div className="navigation_button" onClick={()=>{this.setState({activeTab: 'notification'})}}>Notif</div>
                     </div>
+                    
                 </div>
                 <div className="content">
                     {this.renderComponent()}
@@ -544,6 +547,17 @@ class Student extends Component {
                         </div>
                     </div>
                 </div>
+                <div className="logout-system"
+                    onClick={()=>{
+                        if (window.confirm('Are you sure to logout?')){
+                            sessionStorage.removeItem('token');
+                            if(typeof window !== 'undefined'){
+                                window.location.href = (baseUrl+'/');
+                            } else {
+                                alert('we are having trouble loggin you out')
+                            }
+                        }
+                    }}> Logout </div>
 
                 <div className="right-main">
                     <div className="tablet-banner"> </div>

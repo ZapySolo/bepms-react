@@ -9,6 +9,8 @@ import Settings from '../Setting/Setting';
 import AdminDashboard from './AdminDashboard/AdminDashboard';
 import AdminSystem from './AdminSystem/AdminSystem';
 
+const baseUrl = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? '': '';
+
 class Admin extends Component {
     constructor(props) {
         super(props);
@@ -63,13 +65,23 @@ class Admin extends Component {
                         </div>
                     </div>
                 </div>
+                <div className="logout-system"
+                    onClick={()=>{
+                        if (window.confirm('Are you sure to logout?')){
+                            sessionStorage.removeItem('token');
+                            if(typeof window !== 'undefined'){
+                                window.location.href = (baseUrl+'/');
+                            } else {
+                                alert('we are having trouble loggin you out')
+                            }
+                        }
+                    }}> Logout </div>
 
                 <div className="right-main">
                     <div className="tablet-banner">
-                
+
                     </div>
                     <div className="content-tablet" style={{height:window.innerHeight-111, overflow:'scroll'}}>
-                        
                         {this.renderComponent()}
                     </div>
                 </div>

@@ -107,7 +107,7 @@ class FacultyReport extends Component {
                             <span className="report-result-title-text-f">{element.report_title}</span>
                         </div>
                         <div>
-                            <span className="reporst-result-date-text-f">{element.report_creation_date}</span>
+                            <span className="report-result-date-text-f">{customTimeString(element.report_creation_date)}</span>
                         </div>
                     </div>
                 </div>
@@ -464,5 +464,22 @@ class FacultyReport extends Component {
     }
 }
 
+function customTimeString(time_in_string){
+    let timestampNow = Date.now();
+    let time = Date.parse(time_in_string); //in sec
+    time = (timestampNow - time)/1000;
+    if(time < 600){
+        return 'now';
+    } else if (time < 3600){
+        return Math.floor(time / 60)+' min ago'; //sec to min
+    } else if (time < 86400){
+        return Math.floor(time / 3600)+' hour ago'; //sec to hour
+    } else if (time < 1036800){
+        return Math.floor(time / 86400)+' days ago'; //sec to day
+    } else {
+        let x = new Date (time * 1000);
+        return x.getDate() + '/' + (x.getMonth()+1) + '/' + x.getFullYear();
+    }
+}
 
 export default FacultyReport;
