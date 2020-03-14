@@ -11,7 +11,7 @@ import NetworkHelper from '../Helpers/NetworkHelper';
 
 import {withRouter} from 'react-router';
 
-const baseUrl = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? '': '/bepms';
+const baseUrl = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? '': '';
 
 //<img src={require('../../assets/bepms-loading.gif')} alt="loading..." />
 class Login extends Component {
@@ -194,7 +194,7 @@ class Login extends Component {
                                             onChange={(event)=>{this.setState({userPassword: event.target.value})}}
                                             className="login-input-field"
                                             style={errorInputStyle}
-                                            type="text" 
+                                            type="password" 
                                             value={this.state.userPassword}
                                         />
                                     </div>
@@ -283,7 +283,7 @@ class Login extends Component {
                                             onChange={(event)=>{this.setState({userPassword: event.target.value})}}
                                             className="login-input-field"
                                             style={errorInputStyle}
-                                            type="text" 
+                                            type="password" 
                                             value={this.state.userPassword}
                                         />
                                     </div>

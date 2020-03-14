@@ -416,6 +416,8 @@ border: 1px solid #E9EFF4;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin: 10px 0px;
+
 }
 
 .member-detail{
@@ -424,8 +426,8 @@ border: 1px solid #E9EFF4;
 }
 
 .member-profile-img{
-    height: 30px;
-    width: 30px;
+    height: 20px;
+    width: 20px;
     border-radius: 15px;
 }
 

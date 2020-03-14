@@ -18,7 +18,7 @@ class Faculty extends Component {
         this.state = {
             sideBarToggle: false,
             activeTab: 'home',
-            searchTypeToggle:'currentSystem', //currentSystem, allSystem
+            searchTypeToggle:'allSystem', //currentSystem, allSystem
             fetchedSystemList:'',
             activeSystem:'',
             activeSystemPositionName:'',
@@ -156,7 +156,11 @@ class Faculty extends Component {
         let render = allSystems.map((element, key)=>{
             return <>
                 <div className="currentSystem_content_f" onClick={()=>{
-                        if(!this.state.activeSystem === element) this.setState({activeSystem:element})
+                        if(this.state.activeSystem !== element) {
+                            console.log(this.state.activeSystem, element);
+                            this.setState({activeSystem:element});
+                            this.submitSearch();
+                        }
                     }}>
                     <div className="other_system_title">
                         <div className="folderIconContainer"><img src={FolderIcon} alt="folder_icon" height="28" /></div>
@@ -183,42 +187,57 @@ class Faculty extends Component {
     submitSearch = () => {
         let activeSystem = this.state.activeSystem;
         if(!activeSystem) return ;
-        
-        var networkHelper = new NetworkHelper();
 
+        this.setState({submitSearchFlag:true});
+
+        var networkHelper = new NetworkHelper();
         networkHelper.setData('Authorization', sessionStorage.getItem('token'));
         networkHelper.setData('search_input', this.state.searchInput);
         if(this.state.searchTypeToggle === 'currentSystem'){
             networkHelper.setData('system_id', activeSystem.system_id);
+        } else {
+            networkHelper.setData('system_id', '');
         }
         networkHelper.setData('user_position', this.state.activeSystemPositionName);
         networkHelper.setApiPath('facultyHomeProjectAndReports');
-        console.log('findinig p&r for user position:: '+this.state.activeSystemPositionName+' by search ==='+this.state.searchInput);
         networkHelper.execute((response) => {
             if (response.status === 200){
                 let data = response.data.data;
-                this.setState({searchResultProject:data.project, searchResultReport:data.report});
+                this.setState({searchResultProject:data.project, searchResultReport:data.report,submitSearchFlag:false});
             }
         }, (errorMsg, StatusCode) => {
             if(StatusCode === 401){
+                this.setState({submitSearchFlag:false});
                 alert(errorMsg);
             } else {
+                this.setState({submitSearchFlag:false});
                 alert(errorMsg);
             }
         }, () => {
+            this.setState({submitSearchFlag:false});
             alert("SERVER ERROR OCCURED");
         });
 
     }
 
     renderProjectList = (searchResultProject = []) => {
-        if(!searchResultProject) return ;
+
+        if(this.state.submitSearchFlag){
+            return <div style={{marginTop:20, display:'flex'}}>
+                    <img src={require('../../assets/bepms-loading.gif')} alt="loading projects..." width={35} height={35} />
+                </div>;
+        }
+
+        if(!searchResultProject || searchResultProject.length < 1) 
+            return <div style={{marginTop:10, color:'grey', fontSize:'11px'}}>
+                No Projects To Display
+            </div>;
 
         let render = searchResultProject.map((element, key)=>{
             return <>
                 <div className="project card_rank">
                     <div>
-                        <img src="https://source.unsplashh.com/random/150x100"  alt="project_img" style={{borderRadius:5}} height='100' width='150' />
+                        <img src="https://source.unsplash.com/random/150*100"  alt="project_img" style={{borderRadius:5}} height='100' width='150' />
                     </div>
                     <div className="project-title-text-f">{element.project_name}</div>
                     <div className="project-leader-text-f">{element.leader_display_name}</div>
@@ -229,10 +248,22 @@ class Faculty extends Component {
     }
 
     renderReportList = (searchResultReport = []) => { //remaining, need to change the api data
-        if(!searchResultReport) return ;
+
+        if(this.state.submitSearchFlag){
+            return <div style={{marginTop:20, display:'flex'}}>
+                    <img src={require('../../assets/bepms-loading.gif')} alt="loading projects..." width={35} height={35} />
+                </div>;
+        }
+
+
+        if(!searchResultReport || searchResultReport.length < 1) {
+            return <div style={{color:'grey', fontSize:'11px'}}>
+                No Reports To Display
+            </div>;
+        }
+        console.log(searchResultReport);
 
         let pendingDiv;
-
         let render = searchResultReport.map((element, key)=>{
             pendingDiv = (element.report_status_user === 'pending') ? <div className="report_status_pending" /> : <></>;
             return <>

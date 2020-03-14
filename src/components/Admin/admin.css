@@ -9,6 +9,14 @@
     display: none;
 }
 
+.mobile-view{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .navigation_mobile{
     position: fixed;
     bottom: 0px;
@@ -474,7 +482,15 @@ border: 1px solid #E9EFF4;
 }
 
 .left-navigation-options{
+    width: 111px;
+}
 
+.logo-tcss{
+    height: 111px;
+    width: 111px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .select-projects{
@@ -489,6 +505,10 @@ border: 1px solid #E9EFF4;
 @media (min-width: 768px) {
     /** Tablets and above */
     .main-mobile{
+        display: none;
+    }
+
+    .mobile-view{
         display: none;
     }
 
@@ -560,6 +580,9 @@ border: 1px solid #E9EFF4;
         width: 100%;
     }
     .current_system_position_name{
+        width: 100%;
+    }
+    .logo-tcss{
         width: 100%;
     }
 }

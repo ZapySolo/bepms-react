@@ -29,6 +29,10 @@ class Student extends Component {
             currentProjectPosition:'',
             editProjectTitle:'',
             editProjectDescription:'',
+
+
+            //errors
+            fetchingProjectDetailerror:false
         };
         this.handleOpenModal = this.handleOpenModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -40,8 +44,9 @@ class Student extends Component {
 
     getProjectList = () => {
 
-        var networkHelper = new NetworkHelper();
+        this.setState({fetchingProjectDetailListFlag:true})
 
+        var networkHelper = new NetworkHelper();
         networkHelper.setData('Authorization', sessionStorage.getItem('token'));
         networkHelper.setApiPath('studentProjectList');
 
@@ -49,10 +54,10 @@ class Student extends Component {
             if (response.status === 200){
                 let data = response.data.data;
                 if(data === []){
-                    this.setState({showLoading:false, fetchedProjectList: data});
+                    this.setState({showLoading:false, fetchedProjectList: data, fetchingProjectDetailListFlag:false});
                 } else {
                     try{
-                        this.setState({showLoading:false, fetchedProjectList: data, activeProject: data[0]});
+                        this.setState({showLoading:false, fetchedProjectList: data, activeProject: data[0], fetchingProjectDetailListFlag:false});
                         if(!this.state.currentProjectID){
                             data = data[0];
                             this.getProjectDetailsByProjectId(data.project_id);
@@ -66,8 +71,10 @@ class Student extends Component {
         }, (errorMsg, StatusCode) => {
             if(StatusCode === 401){
                 alert(errorMsg);
+                this.setState({fetchingProjectDetailListFlag:false});
             } else {
                 alert(errorMsg);
+                this.setState({fetchingProjectDetailListFlag:false});
             }
         }, () => {
             alert("SERVER ERROR OCCURED");
@@ -88,7 +95,8 @@ class Student extends Component {
                 return this.StudentHome();
              
             case 'report':
-                return <StudentReport project_id={this.state.currentProjectID} project_position_name={this.state.currentProjectPosition}/>;
+                let activeProject = this.state.activeProject;
+                return <StudentReport project_id={this.state.currentProjectID} project_position_name={this.state.currentProjectPosition} activeProjectName={activeProject.project_name}/>;
               
             case 'setting':
                 return <StudentSetting />;
@@ -171,7 +179,12 @@ class Student extends Component {
                 let project_id = element.project_id;
                 let project_name = element.project_name;
                 return <>
-                    <div key={"cs_c_c_"+key} className="currentSystem_content_s" onClick={()=>{this.changeActiveProjectToId(project_id)}}>
+                    <div key={"cs_c_c_"+key} className="currentSystem_content_s" 
+                        onClick={()=>{
+                            this.setState({fetchedProjectDetails:''});
+                            this.changeActiveProjectToId(project_id);
+                        }}
+                        >
                         <div key={"o_s_t_"+key} className="other_system_title">
                             <div key={"fic_"+key} className="folderIconContainer">
                                 <img key={"fi_afkj"+key} src={FolderIcon} alt="folder_icon" height="28" />
@@ -188,6 +201,11 @@ class Student extends Component {
     SelectProjects = ()=> {
         let fetchedProjectList = this.state.fetchedProjectList;
         let activeProject = this.state.activeProject;
+        if(this.state.fetchingProjectDetailListFlag){
+            return <div style={{marginTop:20, display:'flex', alignItems:'center',justifyContent:'center'}}>
+                <img src={require('../../assets/bepms-loading.gif')} alt="loading projects..." width={35} height={35} />
+            </div>
+        }
         return (
             <div className="selectProjects">
                 <div className="currentSystem">
@@ -286,7 +304,12 @@ class Student extends Component {
         let fetchedProjectDetails = this.state.fetchedProjectDetails;
 
         if(Object.keys(fetchedProjectDetails).length < 1){
-            return <>No Project Selected</>;
+            if(this.state.fetchingProjectDetailerror){
+                return <>Error Occured while fetching data</>;
+            }
+            return <div style={{marginTop:20, display:'flex', alignItems:'center',justifyContent:'center'}}>
+                    <img src={require('../../assets/bepms-loading.gif')} alt="loading..." width={35} height={35} />
+                </div>;
         }
         let project_name = fetchedProjectDetails.project_name || 'N.A';
         let project_description = fetchedProjectDetails.project_description || 'N.A';

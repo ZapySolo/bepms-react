@@ -23,7 +23,11 @@ class StudentReport extends Component {
             newReportDescription:'',
             newReportAttachment:'',
             newReportClaim:0,
-            edit_report_attachment:''
+            edit_report_attachment:'',
+
+
+            //fetching flag
+            fetchingReportlistFlag:false,
         };
     }
 
@@ -74,7 +78,7 @@ class StudentReport extends Component {
                             value={this.state.edit_report_title} style={{color:'#CBCBCB'}}/>
                     </div>
                     <div className="field-error">
-                        <span className="error-message-text">Invalid First Name</span>
+                        <span className="error-message-text">Invalid Title</span>
                     </div>
                 </div>
 
@@ -131,7 +135,7 @@ class StudentReport extends Component {
 
                 <div className="field-input-text-area-element">
                     <div className="setting-submit">
-                        <input className="submit-button" type="submit" name="Submit" />
+                        <input className="submit-button" type="submit" name="Submit" onClick={alert('submit modify report api pending...')}/>
                     </div>
                 </div>
             </>
@@ -290,6 +294,11 @@ class StudentReport extends Component {
             );
         }
 
+        if(this.state.fetchingLReportDetailFlag){
+            return <div style={{marginTop:20, display:'flex', alignItems:'center',justifyContent:'center'}}>
+                    <img src={require('../../../assets/bepms-loading.gif')} alt="loading projects..." width={35} height={35} />
+                </div>;
+        }
         if(!this.state.activeProjectDetails) return<>
            <div style={{marginTop:30, color:'grey', fontSize:'11px'}}>No Report Selected</div>
         </>;
@@ -323,18 +332,18 @@ class StudentReport extends Component {
                         <span>Attachment</span>
                     </div>
                     <div className="description-content">
-                            <a target="_blank" rel="noopener noreferrer" style={{display: "table-cell"}} href={"http://zapy.tech/projects/bepms-ci/uploads/reports/"+(activeProjectDetails.report_attachment || 'N.A')}>
+                            <a target="_blank" rel="noopener noreferrer" style={{display: "table-cell"}} href={"http://zapy.tech/projects/bepms-ci/uploads/projects/reports/"+(activeProjectDetails.report_attachment || 'N.A')}>
                                 {activeProjectDetails.report_attachment || 'N.A'}
                             </a>
                     </div>
                 </div>
 
-                {(this.state.activeProjectPosition !== 'leader') ? <></> : <div className="card_rank mt20">
+                {(activeProjectDetails.report_status_guide === 'modify' && this.state.activeProjectPosition === 'leader') ? <div className="card_rank mt20">
                     <div className="card_inner_rank report-action">
                         <div>Modify Report</div>
                         <div className="action_change_btn" onClick={()=>{this.setState({editReportActive:true})}}>Edit</div>
                     </div>
-                </div>}
+                </div> : <></>}
 
                 <div className="card_rank mt20">
                     <table className="report-status-table">
@@ -373,7 +382,7 @@ class StudentReport extends Component {
 
     submitSearch = () => {
         var networkHelper = new NetworkHelper();
-
+        this.setState({fetchingReportlistFlag:true});
         networkHelper.setData('Authorization', sessionStorage.getItem('token'));
         networkHelper.setData('project_id', this.props.project_id);
         networkHelper.setData('search_input', this.state.reportSearchInput);
@@ -383,11 +392,11 @@ class StudentReport extends Component {
             if (response.status === 200){
                 let data = response.data.data;
                 if(data === []){
-                    this.setState({showLoading:false, fetchedReportList: data});
+                    this.setState({showLoading:false, fetchedReportList: data, fetchingReportlistFlag:false});
                 } else {
                     try{
                         let data0 = data[0];
-                        this.setState({showLoading:false, fetchedReportList: data, activeReportId: data0.report_id});
+                        this.setState({showLoading:false, fetchedReportList: data, activeReportId: data0.report_id, fetchingReportlistFlag:false});
                         this.getReportDetailsByReportID(data0.report_id);
                     } catch {
                         
@@ -396,12 +405,15 @@ class StudentReport extends Component {
             }
         }, (errorMsg, StatusCode) => {
             if(StatusCode === 401){
+                this.setState({fetchingReportlistFlag:false});
                 alert(errorMsg);
             } else {
+                this.setState({fetchingReportlistFlag:false});
                 alert(errorMsg);
             }
         }, () => {
             alert("SERVER ERROR OCCURED");
+            this.setState({fetchingReportlistFlag:false});
         });
     }
 
@@ -410,7 +422,7 @@ class StudentReport extends Component {
     getReportDetailsByReportID = (report_id) => {
         
         var networkHelper = new NetworkHelper();
-
+        this.setState({fetchingLReportDetailFlag:true});
         networkHelper.setData('Authorization', sessionStorage.getItem('token'));
         networkHelper.setData('report_id', report_id);
         networkHelper.setApiPath('studentProjectReportDetailsByReportID');
@@ -419,11 +431,11 @@ class StudentReport extends Component {
             if (response.status === 200){
                 let data = response.data.data;
                 if(data === []){
-                    this.setState({showLoading:false, activeProjectDetails: data});
+                    this.setState({showLoading:false, activeProjectDetails: data,fetchingLReportDetailFlag:false});
                 } else {
                     try{
                         let data0 = data[0];
-                        this.setState({showLoading:false, activeProjectDetails: data0, activeReportId: report_id});
+                        this.setState({showLoading:false, activeProjectDetails: data0, activeReportId: report_id,fetchingLReportDetailFlag:false});
                     } catch {
                         alert('seems like the report was not found!');
                     }
@@ -432,20 +444,32 @@ class StudentReport extends Component {
         }, (errorMsg, StatusCode) => {
             if(StatusCode === 401){
                 alert(errorMsg);
+                this.setState({fetchingLReportDetailFlag:true});
+
             } else {
                 alert(errorMsg);
+            this.setState({fetchingLReportDetailFlag:true});
             }
         }, () => {
             alert("SERVER ERROR OCCURED");
+            this.setState({fetchingLReportDetailFlag:true});
         });
     }
 
     renderReportList = (fetchedReportList = []) => {
-        if(!Array.isArray(fetchedReportList) || fetchedReportList.length < 1){
-            return <>
-                <div style={{marginTop:10, color:'grey', fontSize:'11px'}}>
-                    No Reports To Display, {(this.state.activeProjectPosition === 'leader') ? <>Create new report to be displayed</>:<>. Your Leader has not created any reports yet.</>}
-                </div></>;
+        if(this.state.fetchingReportlistFlag){
+            if(fetchedReportList.length === []){
+                return <>
+                    <div style={{marginTop:10, color:'grey', fontSize:'11px'}}>
+                        No Reports To Display, {(this.state.activeProjectPosition === 'leader') ? <>Create new report to be displayed</>:<>. Your Leader has not created any reports yet.</>}
+                    </div>
+                </>;
+            } else {
+                return <div style={{marginTop:20, display:'flex', alignItems:'center',justifyContent:'center'}}>
+                <img src={require('../../../assets/bepms-loading.gif')} alt="loading projects..." width={35} height={35} />
+            </div>;
+            }
+            
         }
 
         let render = fetchedReportList.map((element, key)=>{
@@ -490,7 +514,7 @@ class StudentReport extends Component {
         }
         return (
             <>
-                <div style={{marginBottom:10}}>Reports</div>
+                <div style={{marginBottom:10}}>Reports :: {this.props.activeProjectName}</div>
 
                 {(this.state.activeProjectPosition !== 'leader') ? <></> :<div 
                     onClick={()=>{this.createReport()}}

@@ -41,10 +41,12 @@ class Admin extends Component {
 
     render() {
         return (
+            <>
+            <div className="mobile-view">Admin Panel cannot be viewed in mobile configuration.</div>
             <div className="main-tablet">
                 <div className="left-navigator">
                     <div className="logo-box" >
-                        <div style={{height:'111px' , width:'111px', display:'flex', justifyContent:'center', alignItems:'center'}}><img src={logo} height="30" alt="bepms"/></div>
+                        <div className="logo-tcss" ><img src={logo} height="30" alt="bepms"/></div>
                     </div>
                     <div className="left-navigation-options">
                         <div className="navigation_icon_wrapper" onClick={()=>{this.setState({activeTab: 'home'})}}>
@@ -67,10 +69,12 @@ class Admin extends Component {
                 
                     </div>
                     <div className="content-tablet" style={{height:window.innerHeight-111, overflow:'scroll'}}>
+                        
                         {this.renderComponent()}
                     </div>
                 </div>
             </div>
+            </>
         );
     }
 }

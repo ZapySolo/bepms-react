@@ -501,6 +501,10 @@ class AdminSystem extends Component {
     }
 
     adminDeleteSystem = (system_id) => {
+        let activeSystem = this.state.activeSystem;
+        if(activeSystem.system_id === system_id){
+            this.setState({activeSystem:'', activeSystemProjects:'', activeSystemProjectsL:''});
+        }
         var networkHelper = new NetworkHelper();
         networkHelper.setData('Authorization', sessionStorage.getItem('token'));
         networkHelper.setData('system_id', system_id);
